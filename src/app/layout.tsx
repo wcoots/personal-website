@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Fjord_One } from 'next/font/google';
 import './globals.css';
 
-const fjordOne = Fjord_One({ weight: '400', subsets: ['latin'] });
+const fjordOne = Fjord_One({ weight: '400', subsets: ['latin'], display: 'swap', adjustFontFallback: false });
 
 export const metadata: Metadata = {
   title: 'Create Next App',
