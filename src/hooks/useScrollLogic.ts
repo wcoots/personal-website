@@ -1,6 +1,5 @@
 import { RefObject, useRef, useEffect } from 'react';
 import chroma from 'chroma-js';
-import { isMobileDevice } from '../utils';
 
 interface ScrollLogicParams {
   containerRef: RefObject<HTMLDivElement>;
@@ -8,7 +7,7 @@ interface ScrollLogicParams {
 
 const trackpadScrollSensitivity = 0.1;
 const mouseWheelScrollSensitivity = 0.2;
-const touchSensitivity = 0.1;
+const touchSensitivity = 0.15;
 const inertiaDecayRate = 0.95;
 const minimumInertiaVelocity = 0.3;
 const smoothingFactor = 0.1;
@@ -21,16 +20,18 @@ const colourScales = {
 };
 
 export function useScrollLogic({ containerRef }: ScrollLogicParams) {
-  const isMobile = isMobileDevice();
+  const isMobile = useRef(false);
   const x = useRef(0);
   const y = useRef(0);
   const touchStartY = useRef(0);
   const lastVelocity = useRef(0);
   const wheelDeltaAccumulator = useRef(0);
   const rafId = useRef<number | null>(null);
-  if (typeof window !== 'undefined') window.history.scrollRestoration = 'manual';
 
   useEffect(() => {
+    window.history.scrollRestoration = 'manual';
+    if (window.innerWidth < 600) isMobile.current = true;
+
     function setBackgroundColour(side: keyof typeof colourScales, percentage: number) {
       // Sets the background colour based on the scroll position.
       // Colours change between 25% and 75% of the scroll area.
@@ -87,7 +88,6 @@ export function useScrollLogic({ containerRef }: ScrollLogicParams) {
       if (!containerRef.current) return;
 
       delta = Math.max(Math.min(delta, 10), -10);
-
       y.current = (y.current + delta + 400) % 400;
 
       if (y.current < 100) {
@@ -129,7 +129,7 @@ export function useScrollLogic({ containerRef }: ScrollLogicParams) {
 
       const delta = wheelDeltaAccumulator.current * smoothingFactor;
       const direction = delta > 0 ? 'clockwise' : 'anti-clockwise';
-      isMobile ? verticalScroll({ delta }) : circularScroll({ direction, delta });
+      isMobile.current ? verticalScroll({ delta }) : circularScroll({ direction, delta });
 
       wheelDeltaAccumulator.current -= delta;
       rafId.current = requestAnimationFrame(applyWheelInertia);

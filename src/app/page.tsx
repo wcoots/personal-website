@@ -1,33 +1,31 @@
 'use client';
 import { useRef } from 'react';
 import { useGreetings, useScrollLogic } from '../hooks';
-import { isMobileDevice } from '../utils';
-import styles from './page.module.css';
 import { IconButton } from '../components';
+import styles from './page.module.css';
 
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const isMobile = isMobileDevice();
-  const containerClass = isMobile ? styles['container-mobile'] : styles.container;
-  const sectionClass = isMobile ? styles['section-mobile'] : styles.section;
-
   const greeting = useGreetings();
   useScrollLogic({ containerRef });
 
   return (
-    <div ref={containerRef} className={containerClass}>
-      <div className={sectionClass}>{greeting}</div>
-      <div className={sectionClass}>
-        I am <br /> William Cooter
+    <div className={styles.container}>
+      <div ref={containerRef} className={styles.viewport}>
+        <div className={styles.section}>{greeting}</div>
+        <div className={styles.section}>
+          {' '}
+          I am <br /> William Cooter
+        </div>
+        <div className={styles.section}>
+          I am a software engineer <br /> at Living Map
+        </div>
+        <div className={styles.section}>
+          <IconButton identifier="github" />
+          <IconButton identifier="linkedin" />
+        </div>
+        <div className={styles.section}>{greeting}</div>
       </div>
-      <div className={sectionClass}>
-        I am a software engineer <br /> at Living Map
-      </div>
-      <div className={sectionClass}>
-        <IconButton identifier="github" />
-        <IconButton identifier="linkedin" />
-      </div>
-      {isMobile && <div className={sectionClass}>{greeting}</div>}
     </div>
   );
 }
