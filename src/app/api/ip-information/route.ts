@@ -11,9 +11,18 @@ export async function GET(request: Request) {
   const response = await fetch(
     `https://api.bigdatacloud.net/data/ip-geolocation?key=${process.env.BIG_DATA_CLOUD_API_KEY}&ip=${ip}`,
   );
+
+  const res = await response.json();
+
+  console.log(res);
+
+  // const {
+  //   location: { longitude, latitude, principalSubdivision },
+  // }: GeoLocationAPIResponse = await response.json();
+
   const {
     location: { longitude, latitude, principalSubdivision },
-  }: GeoLocationAPIResponse = await response.json();
+  } = res;
 
   return new Response(JSON.stringify({ longitude, latitude, principalSubdivision }));
 }
