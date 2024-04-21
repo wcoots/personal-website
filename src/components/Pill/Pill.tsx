@@ -1,4 +1,4 @@
-import './Pill.css';
+import styles from './Pill.module.css';
 
 interface Props {
   content: string;
@@ -7,7 +7,7 @@ interface Props {
 
 function Pill({ content, handleClick }: Props) {
   return (
-    <div className="pill" onClick={() => handleClick()}>
+    <div className={styles.pill} onClick={() => handleClick()}>
       {content}
     </div>
   );

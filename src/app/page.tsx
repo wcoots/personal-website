@@ -1,7 +1,7 @@
 'use client';
 import { useRef } from 'react';
-import { useGreetings, useScrollLogic } from '../hooks';
-import { IconButton } from '../components';
+import { useGreetings, useScrollLogic } from '@/hooks';
+import { IconButton } from '@/components';
 import styles from './page.module.css';
 
 export default function Home() {

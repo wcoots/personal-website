@@ -1,0 +1,44 @@
+.map-page-container {
+  display: flex;
+  width: 100svw;
+  height: 100svh;
+  position: relative;
+  overflow: scroll;
+}
+
+.map-background {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100svw;
+  height: 100svh;
+  z-index: 1;
+}
+
+.theme-drop-down {
+  z-index: 10;
+  height: 68px;
+  color: #ffffffde;
+}
+
+.map-container {
+  width: 750px;
+  height: 845px;
+  position: fixed;
+  top: max(0px, calc((100vh - 845px) / 2));
+  left: max(0px, calc((100svw - 1225px) / 2));
+}
+
+.disclaimer {
+  width: 400px;
+  position: absolute;
+  right: 50px;
+  bottom: 50px;
+  font-size: 15px;
+  z-index: 9;
+  color: #ffffffde;
+}
+
+.wikipedia-external-link {
+  color: white;
+}

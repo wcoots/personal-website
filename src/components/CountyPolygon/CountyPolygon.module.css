@@ -1,0 +1,9 @@
+.county-svg {
+  position: absolute;
+  pointer-events: none;
+}
+
+.county-path {
+  cursor: pointer;
+  pointer-events: all;
+}

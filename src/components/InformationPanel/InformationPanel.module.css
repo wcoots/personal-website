@@ -1,0 +1,23 @@
+.information-panel {
+  position: fixed;
+  right: 0;
+  padding: 25px;
+  margin: 25px;
+  background-color: #fcf5e5;
+  border-radius: 10px;
+  height: calc(100svh - 100px);
+  width: 400px;
+  color: black;
+  z-index: 10;
+}
+
+.pills-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.county-image {
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 20px;
+}

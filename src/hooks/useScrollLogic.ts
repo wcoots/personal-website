@@ -8,8 +8,8 @@ interface ScrollLogicParams {
 const trackpadScrollSensitivity = 0.1;
 const mouseWheelScrollSensitivity = 0.2;
 const touchSensitivity = 0.15;
-const inertiaDecayRate = 0.95;
-const minimumInertiaVelocity = 0.3;
+const inertiaDecayRate = 0.97;
+const minimumInertiaVelocity = 0.4;
 const smoothingFactor = 0.1;
 const backgroundColours = { blue: '#2c5b6b', red: '#8f4731', grey: '#53494c', green: '#7b7d2a' };
 const colourScales = {
@@ -152,7 +152,7 @@ export function useScrollLogic({ containerRef }: ScrollLogicParams) {
     function handleTouchEnd() {
       lastVelocity.current = Math.max(Math.min(lastVelocity.current, 10), -10);
 
-      const applyInertia = () => {
+      function applyInertia() {
         if (Math.abs(lastVelocity.current) < minimumInertiaVelocity) {
           lastVelocity.current = 0;
           return;
@@ -161,7 +161,7 @@ export function useScrollLogic({ containerRef }: ScrollLogicParams) {
         verticalScroll({ delta: lastVelocity.current });
         lastVelocity.current *= inertiaDecayRate;
         requestAnimationFrame(applyInertia);
-      };
+      }
 
       requestAnimationFrame(applyInertia);
     }
