@@ -1,5 +1,5 @@
 'use client';
-import { useCountySelection } from '@/hooks';
+import { useCountySelection, useLocation } from '@/hooks';
 import { counties } from '@/data/counties';
 import { colourPallets, ColourPalletName } from '@/data/colours';
 import {
@@ -12,6 +12,8 @@ import {
 import styles from './map.module.css';
 
 export default function Map() {
+  const { userCounty, getLocation } = useLocation();
+
   const {
     selectedCounty,
     selectedRegion,
@@ -24,7 +26,7 @@ export default function Map() {
     handleCountryClick,
     handlePalletChange,
     generatePolygonColour,
-  } = useCountySelection(null);
+  } = useCountySelection(userCounty);
 
   return (
     <div className={styles['map-page-container']}>
@@ -36,7 +38,7 @@ export default function Map() {
           handleChange={handlePalletChange}
         />
 
-        {/* <button onClick={() => getLocation()}>Get Location</button> */}
+        <button onClick={() => getLocation()}>Get Location</button>
       </div>
 
       <div id="mapBackground" className={styles['map-background']}>

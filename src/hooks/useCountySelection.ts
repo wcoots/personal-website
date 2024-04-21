@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import chroma from 'chroma-js';
 import { counties, County, CountyName, RegionName, CountryName } from '@/data/counties';
 import { colourPallets, ColourPalletName } from '@/data/colours';
@@ -12,6 +12,24 @@ export function useCountySelection(userCounty: CountyName | null) {
   );
   const [degreesOfSeparation, setDegreesOfSeparation] = useState<CountyName[][] | null>(null);
   const [imageLoading, setImageLoading] = useState(false);
+
+  const handleCountyClick = useCallback((countyName: CountyName) => {
+    const county = counties.find((county) => county.name === countyName);
+
+    setSelectedCounty((currentCounty) => {
+      if (!county || county.name === currentCounty?.name) return null;
+      setImageLoading(true);
+      return county;
+    });
+
+    setDegreesOfSeparation(() => {
+      if (county) return getDegressOfSeparation(county);
+      return null;
+    });
+
+    setSelectedRegion(null);
+    setSelectedCountry(null);
+  }, []);
 
   useEffect(() => {
     const mapBackground = document.getElementById('mapBackground');
@@ -34,25 +52,7 @@ export function useCountySelection(userCounty: CountyName | null) {
     mapBackground?.addEventListener('click', handleDocumentClick);
 
     return () => mapBackground?.removeEventListener('click', handleDocumentClick);
-  }, []);
-
-  function handleCountyClick(countyName: CountyName) {
-    const county = counties.find((county) => county.name === countyName);
-
-    setSelectedCounty((currentCounty) => {
-      if (!county || county.name === currentCounty?.name) return null;
-      setImageLoading(true);
-      return county;
-    });
-
-    setDegreesOfSeparation(() => {
-      if (county) return getDegressOfSeparation(county);
-      return null;
-    });
-
-    setSelectedRegion(null);
-    setSelectedCountry(null);
-  }
+  }, [handleCountyClick]);
 
   function handleRegionClick(regionName: RegionName) {
     setSelectedRegion(regionName);
