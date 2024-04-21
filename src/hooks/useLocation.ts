@@ -29,8 +29,7 @@ export function useLocation() {
 
   async function getIpInformation(ip: string): Promise<GeoLocationAPIResponse['location'] | null> {
     try {
-      // const response = await fetch(`/api/ip-information?ip=${ip}`, { cache: 'force-cache' }); // TODO: Uncomment this line
-      const response = await fetch(`/api/ip-information?ip=${ip}`);
+      const response = await fetch(`/api/ip-information?ip=${ip}`, { cache: 'force-cache' });
       return response.json();
     } catch (error) {
       console.error('ERROR OBTAINING IP INFORMATION', error);
