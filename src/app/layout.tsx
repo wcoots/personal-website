@@ -16,7 +16,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={fjordOne.className}>{children}</body>
+      <body className={fjordOne.className} style={{ margin: 0 }}>
+        {children}
+      </body>
     </html>
   );
 }

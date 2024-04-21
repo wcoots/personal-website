@@ -1,6 +1,6 @@
 'use client';
 import { useRef } from 'react';
-import { useGreetings } from '../hooks';
+import { useGreetings, useScrollLogic } from '../hooks';
 import { isMobileDevice } from '../utils';
 import styles from './page.module.css';
 import { IconButton } from '../components';
@@ -12,6 +12,7 @@ export default function Home() {
   const sectionClass = isMobile ? styles['section-mobile'] : styles.section;
 
   const greeting = useGreetings();
+  useScrollLogic({ containerRef });
 
   return (
     <div ref={containerRef} className={containerClass}>

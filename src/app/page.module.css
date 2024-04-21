@@ -17,6 +17,7 @@
 }
 
 .container {
+  background-color: #2c5b6b;
   width: 200svw;
   height: 200svh;
   overflow: hidden;
@@ -27,6 +28,7 @@
 }
 
 .container-mobile {
+  background-color: #2c5b6b;
   width: 100svw;
   height: 500svh;
   overflow: hidden;
