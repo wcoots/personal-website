@@ -38,7 +38,9 @@ export default function Map() {
           handleChange={handlePalletChange}
         />
 
-        <button onClick={() => getLocation()}>Get Location</button>
+        <button className={styles['get-location-button']} onClick={() => getLocation()}>
+          Get Location
+        </button>
       </div>
 
       <div id="mapBackground" className={styles['map-background']}>

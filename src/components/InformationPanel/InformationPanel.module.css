@@ -21,3 +21,22 @@
   bottom: 0;
   margin-bottom: 20px;
 }
+
+@media (max-width: 750px) {
+  .information-panel {
+    width: calc(100svw - 30px);
+    height: calc((100svh - 120px - (1.13 * (100svw - 20px))));
+    padding: 15px;
+    border-bottom-left-radius: unset;
+    border-bottom-right-radius: unset;
+    margin: unset;
+    left: unset;
+    top: unset;
+    bottom: 0;
+    overflow-y: scroll;
+  }
+
+  .county-image {
+    display: none;
+  }
+}

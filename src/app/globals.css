@@ -5,4 +5,12 @@
 html,
 body {
   background-color: #242424;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  -ms-overflow-style: none;
+  touch-action: pan-down;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
