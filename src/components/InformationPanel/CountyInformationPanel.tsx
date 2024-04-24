@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import InformationPanel from './InformationPanel';
 import Pill from '../Pill/Pill';
 import { County, CountyName, RegionName, CountryName } from '@/data/counties';
 import { toTitleCase } from '@/utils';
@@ -22,7 +22,7 @@ function CountyInformationPanel({
   setImageLoading,
 }: Props) {
   return (
-    <div className={styles['information-panel']}>
+    <InformationPanel>
       <h1>{toTitleCase(selectedCounty.name)}</h1>
 
       <h2>Country</h2>
@@ -51,10 +51,9 @@ function CountyInformationPanel({
 
       <div style={{ display: imageLoading ? 'none' : 'block', width: '400px' }}>
         {selectedCounty.imageUrl && (
-          <Image
+          <img
             className={styles['county-image']}
-            width={400}
-            height={250}
+            width={Math.min(400, window.outerWidth - 40)}
             src={selectedCounty.imageUrl}
             alt={selectedCounty.name}
             loading="eager"
@@ -63,7 +62,7 @@ function CountyInformationPanel({
           />
         )}
       </div>
-    </div>
+    </InformationPanel>
   );
 }
 

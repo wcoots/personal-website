@@ -1,3 +1,4 @@
+import InformationPanel from './InformationPanel';
 import Pill from '../Pill/Pill';
 import { counties, CountyName, RegionName, CountryName } from '@/data/counties';
 import { toTitleCase } from '@/utils';
@@ -11,7 +12,7 @@ interface Props {
 
 function CountryInformationPanel({ selectedCountry, handleCountyClick, handleRegionClick }: Props) {
   return (
-    <div className={styles['information-panel']}>
+    <InformationPanel>
       <h1>{toTitleCase(selectedCountry)}</h1>
 
       <h2>Regions</h2>
@@ -42,7 +43,7 @@ function CountryInformationPanel({ selectedCountry, handleCountyClick, handleReg
             />
           ))}
       </div>
-    </div>
+    </InformationPanel>
   );
 }
 

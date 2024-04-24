@@ -1,3 +1,4 @@
+import InformationPanel from './InformationPanel';
 import Pill from '../Pill/Pill';
 import { counties, CountyName, RegionName, CountryName } from '@/data/counties';
 import { toTitleCase } from '@/utils';
@@ -13,7 +14,7 @@ function RegionInformationPanel({ selectedRegion, handleCountyClick, handleCount
   const regionCounties = counties.filter((county) => county.regions.includes(selectedRegion));
 
   return (
-    <div className={styles['information-panel']}>
+    <InformationPanel>
       <h1>{toTitleCase(selectedRegion)}</h1>
 
       <h2>Country</h2>
@@ -32,7 +33,7 @@ function RegionInformationPanel({ selectedRegion, handleCountyClick, handleCount
           />
         ))}
       </div>
-    </div>
+    </InformationPanel>
   );
 }
 

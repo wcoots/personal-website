@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import styles from './IconButton.module.css';
 
 type IconType = 'github' | 'linkedin';
@@ -20,16 +19,7 @@ function IconButton({ identifier }: Props) {
     window.open(iconUrl, '_blank');
   }
 
-  return (
-    <Image
-      className={styles['icon-button']}
-      src={iconPath}
-      width={96}
-      height={96}
-      alt={`${identifier} icon`}
-      onClick={handleClick}
-    />
-  );
+  return <img className={styles['icon-button']} src={iconPath} alt={`${identifier} icon`} onClick={handleClick} />;
 }
 
 export default IconButton;
