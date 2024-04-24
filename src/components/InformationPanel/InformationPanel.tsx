@@ -9,7 +9,7 @@ export interface Props {
 function InformationPanel({ children }: Props) {
   const { height, setHeight, mostRecentState, setMostRecentState } = informationPanelStore();
   const minHeight = 100;
-  const maxHeight = window.outerHeight - 100;
+  const maxHeight = window.innerHeight - 100;
   const isMobile = window.outerWidth < 750;
   const heightRef = useRef(height);
   const mostRecentStateRef = useRef(mostRecentState);
