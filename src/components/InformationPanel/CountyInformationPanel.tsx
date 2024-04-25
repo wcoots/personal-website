@@ -1,7 +1,7 @@
 import InformationPanel from './InformationPanel';
 import Pill from '../Pill/Pill';
 import { County, CountyName, RegionName, CountryName } from '@/data/counties';
-import { toTitleCase } from '@/utils';
+import { isMobile, toTitleCase } from '@/utils';
 import styles from './InformationPanel.module.css';
 
 interface Props {
@@ -53,7 +53,7 @@ function CountyInformationPanel({
         {selectedCounty.imageUrl && (
           <img
             className={styles['county-image']}
-            width={Math.min(400, window.outerWidth - 40)}
+            width={isMobile() ? window.outerWidth - 40 : 400}
             src={selectedCounty.imageUrl}
             alt={selectedCounty.name}
             loading="eager"

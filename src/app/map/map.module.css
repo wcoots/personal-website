@@ -15,10 +15,11 @@
   z-index: 1;
 }
 
-.theme-drop-down {
+.map-page-header {
   z-index: 10;
-  height: 68px;
+  height: 75px;
   color: #ffffffde;
+  width: 100svw;
 }
 
 .map-container {
@@ -63,6 +64,6 @@
     width: calc(100svw - 20px);
     height: calc(100svh - 20px);
     left: 10px;
-    top: 70px;
+    top: 75px;
   }
 }

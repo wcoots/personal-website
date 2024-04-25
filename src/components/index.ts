@@ -4,4 +4,5 @@ export { default as RegionInformationPanel } from './InformationPanel/RegionInfo
 export { default as CountryInformationPanel } from './InformationPanel/CountryInformationPanel';
 export { default as DropDown } from './DropDown/DropDown';
 export { default as IconButton } from './IconButton/IconButton';
+export { default as LocationPin } from './LocationPin/LocationPin';
 export { default as Pill } from './Pill/Pill';
