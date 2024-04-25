@@ -1,5 +1,5 @@
 .pill {
-  background-color: #ebd5b3;
+  background-color: var(--tanborder);
   border-radius: 5px;
   margin: 2px;
   padding: 0px 5px;

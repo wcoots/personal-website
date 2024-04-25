@@ -1,10 +1,13 @@
 :root {
-  background-color: #242424;
+  --blacktext: #242424;
+  --tanbackground: #fcf5e5;
+  --tanborder: #ebd5b3;
+  background-color: var(--blacktext);
 }
 
 html,
 body {
-  background-color: #242424;
+  background-color: var(--blacktext);
   overflow: hidden;
   -webkit-tap-highlight-color: transparent;
   -ms-overflow-style: none;
@@ -13,4 +16,11 @@ body {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+button {
+  background-color: var(--tanbackground);
+  border-color: var(--tanborder);
+  border-radius: 5px;
+  padding: 5px;
 }

@@ -2,6 +2,15 @@
   margin: 20px;
 }
 
+.dropdown-label {
+  margin-right: 10px;
+}
+
 .dropdown {
   cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+  border-color: var(--tanborder);
+  background-color: var(--tanbackground);
+  color: var(--blacktext);
 }

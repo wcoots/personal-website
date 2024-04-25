@@ -3,11 +3,11 @@
   right: 0;
   padding: 25px;
   margin: 25px;
-  background-color: #fcf5e5;
+  background-color: var(--tanbackground);
   border-radius: 10px;
   height: calc(100svh - 100px);
   width: 400px;
-  color: black;
+  color: var(--blacktext);
   z-index: 10;
 }
 
@@ -48,7 +48,7 @@
     width: 50px;
     height: 3px;
     border-radius: 3px;
-    background-color: #ebd5b3;
+    background-color: var(--tanborder);
     position: absolute;
     right: calc(50svw - 25px);
     top: 10px;

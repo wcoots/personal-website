@@ -51,6 +51,7 @@
   top: 0px;
   margin: 20px;
   z-index: 9;
+  color: var(--blacktext);
 }
 
 @media (max-width: 1060px) {
@@ -65,5 +66,13 @@
     height: calc(100svh - 20px);
     left: 10px;
     top: 75px;
+  }
+
+  .get-location-button {
+    position: relative;
+    right: unset;
+    margin-top: unset;
+    left: 0px;
+    z-index: 9;
   }
 }
