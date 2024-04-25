@@ -46,12 +46,9 @@
 }
 
 .get-location-button {
-  position: absolute;
-  right: 0px;
-  top: 0px;
-  margin: 20px;
+  position: relative;
   z-index: 9;
-  color: var(--blacktext);
+  margin-left: 20px;
 }
 
 @media (max-width: 1060px) {
@@ -69,10 +66,9 @@
   }
 
   .get-location-button {
-    position: relative;
-    right: unset;
-    margin-top: unset;
-    left: 0px;
-    z-index: 9;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    margin: 20px;
   }
 }

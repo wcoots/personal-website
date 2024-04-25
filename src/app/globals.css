@@ -21,6 +21,7 @@ body {
 button {
   background-color: var(--tanbackground);
   border-color: var(--tanborder);
+  color: var(--blacktext);
   border-radius: 5px;
   padding: 5px;
 }
