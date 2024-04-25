@@ -3,7 +3,7 @@ import chroma from 'chroma-js';
 import { counties, County, CountyName, RegionName, CountryName } from '@/data/counties';
 import { colourPallets, ColourPalletName } from '@/data/colours';
 
-export function useCountySelection(userCounty: CountyName | null) {
+export function useCountySelection() {
   const [selectedCounty, setSelectedCounty] = useState<County | null>(null);
   const [selectedRegion, setSelectedRegion] = useState<RegionName | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<CountryName | null>(null);
@@ -84,8 +84,6 @@ export function useCountySelection(userCounty: CountyName | null) {
       return colourPallet.range[0];
     } else if (selectedRegion && county.country === counties.find((c) => c.regions.includes(selectedRegion))?.country) {
       return colourPallet.secondLightest;
-    } else if (!selectedCounty && !selectedRegion && !selectedCountry && county.name === userCounty) {
-      return colourPallet.range[0];
     } else if (!selectedCounty && !selectedRegion && !selectedCountry && county.imageUrl) {
       return colourPallet.secondLightest;
     } else {

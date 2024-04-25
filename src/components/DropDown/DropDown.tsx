@@ -17,17 +17,11 @@ function DropDown<T extends string>({ title, initialValue, options, handleChange
   };
 
   return (
-    <div className={styles['dropdown-container']} style={{ margin: '20px' }}>
-      <label htmlFor="dropdown" style={{ marginRight: '10px' }}>
+    <div className={styles['dropdown-container']}>
+      <label htmlFor="dropdown" className={styles['dropdown-label']}>
         {title}:
       </label>
-      <select
-        id="dropdown"
-        className={styles.dropdown}
-        value={selectedItem}
-        onChange={onChange}
-        style={{ padding: '5px 10px', borderRadius: '4px' }}
-      >
+      <select id="dropdown" className={styles.dropdown} value={selectedItem} onChange={onChange}>
         {options.map((option) => (
           <option key={option} value={option}>
             {option}

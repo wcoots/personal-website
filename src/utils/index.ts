@@ -4,3 +4,13 @@ export function toTitleCase(input: string) {
     .map((word) => (['and', 'of'].includes(word) ? word : word[0].toUpperCase() + word.slice(1)))
     .join(' ');
 }
+
+export function transformPosition(x: number, y: number, windowWidth: number) {
+  if (!isMobile(windowWidth)) return { x, y };
+  const shrinkFactor = windowWidth / 790;
+  return { x: x * shrinkFactor, y: y * shrinkFactor };
+}
+
+export function isMobile(windowWidth?: number) {
+  return (windowWidth ?? window.outerWidth) <= 750;
+}

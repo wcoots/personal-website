@@ -1,6 +1,7 @@
 import React, { ReactNode, useRef, useEffect } from 'react';
 import styles from './InformationPanel.module.css';
 import { informationPanelStore } from '@/store';
+import { isMobile } from '@/utils';
 
 export interface Props {
   children: ReactNode;
@@ -9,15 +10,15 @@ export interface Props {
 function InformationPanel({ children }: Props) {
   const { height, setHeight, mostRecentState, setMostRecentState } = informationPanelStore();
   const minHeight = 100;
-  const maxHeight = window.innerHeight - 100;
-  const isMobile = window.outerWidth < 750;
+  const maxHeight = window.outerHeight - 100;
+  const mobile = isMobile();
   const heightRef = useRef(height);
   const mostRecentStateRef = useRef(mostRecentState);
   const headerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!height) setHeight(isMobile ? minHeight : maxHeight - 100);
-  }, []);
+    if (!height) setHeight(mobile ? minHeight : maxHeight - 100);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     heightRef.current = height;
@@ -51,14 +52,14 @@ function InformationPanel({ children }: Props) {
       window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [setHeight, setMostRecentState]);
+  }, [setHeight, setMostRecentState]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className={styles['information-panel']} style={{ height: `${height}px` }}>
       <div
         ref={headerRef}
         className={styles['information-panel-header']}
-        style={isMobile ? { height: minHeight, width: window.outerWidth } : { display: 'none' }}
+        style={mobile ? { height: minHeight, width: window.outerWidth } : { display: 'none' }}
       >
         <div className={styles['information-panel-header-tab']} />
       </div>

@@ -5,6 +5,7 @@ import { colourPallets, ColourPalletName } from '@/data/colours';
 import {
   DropDown,
   CountyPolygon,
+  LocationPin,
   CountyInformationPanel,
   RegionInformationPanel,
   CountryInformationPanel,
@@ -12,7 +13,7 @@ import {
 import styles from './map.module.css';
 
 export default function Map() {
-  const { userCounty, getLocation } = useLocation();
+  const { userLocation, getLocation } = useLocation();
 
   const {
     selectedCounty,
@@ -26,11 +27,11 @@ export default function Map() {
     handleCountryClick,
     handlePalletChange,
     generatePolygonColour,
-  } = useCountySelection(userCounty);
+  } = useCountySelection();
 
   return (
     <div className={styles['map-page-container']}>
-      <div className={styles['theme-drop-down']}>
+      <div className={styles['map-page-header']}>
         <DropDown<ColourPalletName>
           title="Theme"
           initialValue={selectedColourPallet}
@@ -48,6 +49,10 @@ export default function Map() {
           {counties.map((county) => {
             return <CountyPolygon key={county.name} county={county} colour={generatePolygonColour(county)} />;
           })}
+
+          {userLocation && (
+            <LocationPin xPosition={userLocation.x} yPosition={userLocation.y} colourPallet={selectedColourPallet} />
+          )}
         </div>
       </div>
 

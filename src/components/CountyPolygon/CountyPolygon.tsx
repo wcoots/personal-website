@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { County } from '@/data/counties';
 import styles from './CountyPolygon.module.css';
+import { transformPosition } from '@/utils';
 
 interface Props {
   county: County;
@@ -12,16 +13,13 @@ const CountyPolygon = React.memo(function ({ county, colour }: Props) {
 
   const paths = county.coordinates.map((polygon) => `M ${polygon.map(([x, y]) => `${x} ${y}`).join(' L ')} Z`);
 
-  function transformValue(value: number) {
-    if (windowWidth.current > 750) return value;
-    const shrinkFactor = windowWidth.current / 790;
-    return value * shrinkFactor;
-  }
+  const { x: width, y: height } = transformPosition(
+    county.dimensions.width,
+    county.dimensions.height,
+    windowWidth.current,
+  );
 
-  const width = transformValue(county.dimensions.width);
-  const height = transformValue(county.dimensions.height);
-  const positionX = transformValue(county.position.x);
-  const positionY = transformValue(county.position.y);
+  const { x: positionX, y: positionY } = transformPosition(county.position.x, county.position.y, windowWidth.current);
 
   return (
     <svg
