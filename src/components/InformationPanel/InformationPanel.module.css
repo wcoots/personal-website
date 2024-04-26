@@ -40,6 +40,7 @@
 
   .information-panel-header {
     height: 100px;
+    width: 100svw;
     z-index: 110;
     position: absolute;
   }

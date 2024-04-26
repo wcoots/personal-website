@@ -1,25 +1,29 @@
+import Link from 'next/link';
 import styles from './IconButton.module.css';
+import { HTMLAttributeAnchorTarget } from 'react';
 
-type IconType = 'github' | 'linkedin';
+type IconType = 'github' | 'linkedin' | 'map';
 
 interface Props {
   identifier: IconType;
 }
 
-const iconSvgs: { [iconType in IconType]: { path: string; url: string } } = {
-  github: { path: '/github.svg', url: 'https://github.com/wcoots' },
-  linkedin: { path: '/linkedin.svg', url: 'https://www.linkedin.com/in/wcoots/' },
+const iconSvgs: { [iconType in IconType]: { path: string; url: string; target: HTMLAttributeAnchorTarget } } = {
+  github: { path: '/github.svg', url: 'https://github.com/wcoots', target: '_blank' },
+  linkedin: { path: '/linkedin.svg', url: 'https://www.linkedin.com/in/wcoots/', target: '_blank' },
+  map: { path: '/map.svg', url: '/map', target: '_self' },
 };
 
 function IconButton({ identifier }: Props) {
   const iconPath = iconSvgs[identifier].path;
   const iconUrl = iconSvgs[identifier].url;
+  const iconTarget = iconSvgs[identifier].target;
 
-  function handleClick() {
-    window.open(iconUrl, '_blank');
-  }
-
-  return <img className={styles['icon-button']} src={iconPath} alt={`${identifier} icon`} onClick={handleClick} />;
+  return (
+    <Link className={styles['link']} href={iconUrl} target={iconTarget}>
+      <img className={styles['icon-button']} src={iconPath} alt={`${identifier} icon`} />
+    </Link>
+  );
 }
 
 export default IconButton;

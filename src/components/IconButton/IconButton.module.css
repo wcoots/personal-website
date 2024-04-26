@@ -1,7 +1,10 @@
 .icon-button {
   padding: 0.5svw;
-  margin: 2.5svw;
   cursor: pointer;
   width: 8svw;
   height: 8svw;
+}
+
+.link {
+  margin: 2.5svw;
 }

@@ -55,12 +55,8 @@ function InformationPanel({ children }: Props) {
   }, [setHeight, setMostRecentState]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <div className={styles['information-panel']} style={{ height: `${height}px` }}>
-      <div
-        ref={headerRef}
-        className={styles['information-panel-header']}
-        style={mobile ? { height: minHeight, width: window.outerWidth } : { display: 'none' }}
-      >
+    <div className={styles['information-panel']} style={mobile ? { height: `${height}px` } : {}}>
+      <div ref={headerRef} className={styles['information-panel-header']}>
         <div className={styles['information-panel-header-tab']} />
       </div>
       <div className={styles['information-panel-content']}>{children}</div>
