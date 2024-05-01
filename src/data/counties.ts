@@ -1696,6 +1696,7 @@ export const counties: County[] = [
     dimensions: { width: 20.944657930350637, height: 20.227393467736658 },
     viewbox: { x: 20.94, y: 20.23 },
     borderingCounties: ['gloucestershire', 'somerset'],
+    imageUrl: 'https://i.ibb.co/8P3df1R/bristol.jpg',
     coordinates: [
       [
         [0.16, 4.89],
@@ -9407,6 +9408,7 @@ export const counties: County[] = [
       'herefordshire',
       'monmouthshire',
       'oxfordshire',
+      'somerset',
       'warwickshire',
       'wiltshire',
       'worcestershire',

@@ -2,7 +2,7 @@
 import { useRef } from 'react';
 import { useGreetings, useScrollLogic } from '@/hooks';
 import { IconButton } from '@/components';
-import styles from './page.module.css';
+import styles from './homepage.module.css';
 
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -24,6 +24,7 @@ export default function Home() {
           <IconButton identifier="github" />
           <IconButton identifier="linkedin" />
           <IconButton identifier="map" />
+          <IconButton identifier="dashboard" />
         </div>
         <div className={styles.section}>{greeting}</div>
       </div>

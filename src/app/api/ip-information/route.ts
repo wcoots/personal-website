@@ -1,4 +1,4 @@
-import { GeoLocationAPIResponse } from '@/types';
+import type { GeoLocationAPIResponse } from '@/types';
 
 export const dynamic = 'force-dynamic'; // static by default, unless reading the request
 

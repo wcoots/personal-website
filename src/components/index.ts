@@ -6,3 +6,4 @@ export { default as DropDown } from './DropDown/DropDown';
 export { default as IconButton } from './IconButton/IconButton';
 export { default as LocationPin } from './LocationPin/LocationPin';
 export { default as Pill } from './Pill/Pill';
+export { default as FootballWidget } from './Widget/FootballWidget';

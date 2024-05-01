@@ -14,3 +14,13 @@ export function transformPosition(x: number, y: number, windowWidth: number) {
 export function isMobile(windowWidth?: number) {
   return (windowWidth ?? window.outerWidth) <= 750;
 }
+
+export function formatDate(date: Date | string) {
+  if (typeof date === 'string') date = new Date(date);
+  return date.toLocaleDateString('en-GB', {
+    weekday: 'short',
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+  });
+}

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { CountryName } from '../data/counties';
-import { GeoLocationAPIResponse } from '@/types';
+import type { GeoLocationAPIResponse } from '@/types';
 import { transformPosition } from '@/utils';
 
 const SVG_UNITS_PER_DEGREE_LONGITUDE = 99.736466335; // represents 42.02 miles

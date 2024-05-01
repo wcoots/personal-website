@@ -49,7 +49,7 @@ export function useScrollLogic({ containerRef }: ScrollLogicParams) {
     function circularScroll({ direction, delta }: { direction: 'clockwise' | 'anti-clockwise'; delta: number }) {
       if (!containerRef.current) return;
 
-      delta = Math.max(Math.min(delta, 10), -10);
+      delta = Math.max(Math.min(delta, 8), -8);
 
       if (direction === 'clockwise') {
         if (y.current === 0 && x.current < 100) {
