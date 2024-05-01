@@ -12,10 +12,10 @@ function FootballWidget() {
   }, []);
 
   return (
-    <div className={styles.widget}>
+    <div className={styles['widget-football']}>
       {fixtures &&
         fixtures.map((match) => (
-          <div className={styles['widget-panel']} key={match.id}>
+          <div className={styles['football-match-panel']} key={match.id}>
             <img className={styles['football-crest-image']} src={match.homeTeam.crest} alt={match.homeTeam.shortName} />
             <div>
               <p style={match.score.winner === Winner.HOME_TEAM ? { textDecoration: 'underline' } : {}}>

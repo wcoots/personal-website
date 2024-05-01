@@ -7,3 +7,6 @@ export { default as IconButton } from './IconButton/IconButton';
 export { default as LocationPin } from './LocationPin/LocationPin';
 export { default as Pill } from './Pill/Pill';
 export { default as FootballWidget } from './Widget/FootballWidget';
+export { default as WeatherWidget } from './Widget/WeatherWidget';
+export { default as ApodWidget } from './Widget/ApodWidget';
+export { default as MoonPhaseWidget } from './Widget/MoonPhaseWidget';

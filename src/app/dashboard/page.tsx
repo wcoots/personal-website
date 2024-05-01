@@ -1,10 +1,14 @@
 'use client';
-import { FootballWidget } from '@/components';
+import { FootballWidget, WeatherWidget, ApodWidget, MoonPhaseWidget } from '@/components';
+import styles from './dashboard.module.css';
 
 export default function Dashboard() {
   return (
-    <div>
+    <div className={styles.container}>
       <FootballWidget />
+      <WeatherWidget />
+      <MoonPhaseWidget />
+      <ApodWidget />
     </div>
   );
 }

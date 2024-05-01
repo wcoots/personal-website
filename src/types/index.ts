@@ -41,3 +41,15 @@ export interface Match {
   awayTeam: Team;
   score: { winner: Winner | null; halfTime: Score; fullTime: Score };
 }
+
+export interface Weather {
+  name: string;
+  weather: { icon: string; description: string }[];
+  main: { temp: number };
+  sys: { sunrise: number; sunset: number };
+}
+
+export interface MoonPhase {
+  phase: string;
+  emoji: string;
+}

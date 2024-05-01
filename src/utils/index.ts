@@ -24,3 +24,11 @@ export function formatDate(date: Date | string) {
     day: '2-digit',
   });
 }
+
+export function formatTime(date: Date | number) {
+  if (typeof date === 'number') date = new Date(date * 1000);
+  return date.toLocaleTimeString('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}

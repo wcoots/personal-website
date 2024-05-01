@@ -1,12 +1,45 @@
-.widget {
+.widget-football,
+.widget-weather,
+.widget-moon-phase,
+.widget-apod {
   background-color: #dbdddb;
   border-radius: 20px;
-  width: 400px;
   padding: 10px;
-  margin: 20px;
+  margin: 10px;
 }
 
-.widget-panel {
+.widget-football {
+  width: 400px;
+  height: 330px;
+  position: absolute;
+  left: 10px;
+  top: 10px;
+}
+
+.widget-weather {
+  width: 200px;
+  height: 180px;
+  position: absolute;
+  left: 450px;
+  top: 10px;
+}
+
+.widget-moon-phase {
+  width: 200px;
+  height: 110px;
+  position: absolute;
+  left: 450px;
+  top: 230px;
+}
+
+.widget-apod {
+  width: 400px;
+  position: absolute;
+  left: 690px;
+  top: 10px;
+}
+
+.football-match-panel {
   background-color: #f8f8f8;
   border-radius: 10px;
   width: 360px;
@@ -41,4 +74,33 @@
 .football-date {
   font-size: small;
   margin: unset;
+}
+
+.weather-container {
+  margin: 10px;
+}
+
+.weather-header {
+  display: flex;
+  align-items: center;
+}
+
+.weather-image {
+  width: 70px;
+  height: 70px;
+  margin-right: 10px;
+}
+
+.weather-text {
+  margin: unset;
+}
+
+.moon-emoji {
+  font-size: xxx-large;
+  margin: unset;
+}
+
+.apod-image {
+  width: 380px;
+  margin: 10px;
 }
