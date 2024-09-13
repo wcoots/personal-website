@@ -5,7 +5,7 @@ import mapboxgl, { GeoJSONSource, Map as MapboxMap } from 'mapbox-gl';
 
 import { useStore } from '@/store';
 import { TrigTable as TrigPoint } from '@/postgres-schema';
-import { TrigDetails, TrigFilter } from '@/components';
+import { TrigDetails, MapFilter } from '@/components';
 
 import styles from './trig.module.css';
 
@@ -39,10 +39,11 @@ export default function Trig() {
   const {
     trigPoints,
     selectedTrigPoint,
-    trigCountrySettings,
-    trigConditionSettings,
-    nationalParkSettings,
-    aonbSettings,
+    trigSettings,
+    // trigCountrySettings,
+    // trigConditionSettings,
+    // nationalParkSettings,
+    // aonbSettings,
     setTrigPoints,
     setSelectedTrigPoint,
   } = useStore();
@@ -115,10 +116,12 @@ export default function Trig() {
     const features = trigPoints
       ?.filter(
         (trigPoint) =>
-          trigCountrySettings[trigPoint.country] &&
-          trigConditionSettings[trigPoint.condition] &&
-          (trigPoint.national_park ? nationalParkSettings[trigPoint.national_park] : nationalParkSettings.none) &&
-          (trigPoint.aonb ? aonbSettings[trigPoint.aonb] : aonbSettings.none),
+          trigSettings.countries[trigPoint.country] &&
+          trigSettings.conditions[trigPoint.condition] &&
+          (trigPoint.national_park
+            ? trigSettings.nationalParks[trigPoint.national_park]
+            : trigSettings.nationalParks.none) &&
+          (trigPoint.aonb ? trigSettings.aonbs[trigPoint.aonb] : trigSettings.aonbs.none),
       )
       ?.map((trigPoint): Feature<Point, Properties> => {
         const colour = trigConditionColourMap[trigPoint.condition] || '#808080';
@@ -133,7 +136,7 @@ export default function Trig() {
       features: features || [],
     };
     map.current?.getSource<GeoJSONSource>(POINT_SOURCE)?.setData(featureCollection);
-  }, [trigPoints, trigCountrySettings, trigConditionSettings, nationalParkSettings, aonbSettings]);
+  }, [trigPoints, trigSettings]);
 
   useEffect(() => {
     map.current?.on('click', POINT_LAYER, ({ features, lngLat, originalEvent }) => {
@@ -203,7 +206,7 @@ export default function Trig() {
     <>
       <div ref={mapContainer} className={styles['map-container']} />
       {selectedTrigPoint && <TrigDetails trigPoint={selectedTrigPoint} />}
-      <TrigFilter />
+      <MapFilter />
     </>
   );
 }
