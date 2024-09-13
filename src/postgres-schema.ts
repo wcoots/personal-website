@@ -53,7 +53,7 @@ export enum NationalPark {
   YorkshireDales = 'yorkshire dales',
 }
 
-export enum AONB {
+export enum AreaOfNaturalBeauty {
   ArnsideSilverdale = 'arnside & silverdale',
   BlackdownHills = 'blackdown hills',
   CannockChase = 'cannock chase',
@@ -101,7 +101,7 @@ export interface TrigTable {
   height_feet: number | null;
   height_metres: number | null;
   national_park: NationalPark | null;
-  aonb: AONB | null;
+  aonb: AreaOfNaturalBeauty | null;
 }
 
 export interface Database {

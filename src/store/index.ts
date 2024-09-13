@@ -1,6 +1,12 @@
 import { create } from 'zustand';
 import { produce } from 'immer';
-import { TrigTable as TrigPoint, TrigCondition, TrigCountry, NationalPark, AONB } from '@/postgres-schema';
+import {
+  TrigTable as TrigPoint,
+  TrigCondition,
+  TrigCountry,
+  NationalPark,
+  AreaOfNaturalBeauty,
+} from '@/postgres-schema';
 
 export type TrigCountrySettings = {
   [key in TrigCountry]: boolean;
@@ -12,11 +18,11 @@ export type TrigConditionSettings = {
 
 export type NationalParkSettings = {
   [key in NationalPark]: boolean;
-} & { none: boolean };
+} & { 'n/a': boolean };
 
 export type AONBSettings = {
-  [key in AONB]: boolean;
-} & { none: boolean };
+  [key in AreaOfNaturalBeauty]: boolean;
+} & { 'n/a': boolean };
 
 interface State {
   trigPoints: TrigPoint[] | null;
@@ -32,7 +38,7 @@ interface State {
   setTrigCountrySetting(trigCountry: TrigCountry, value: boolean): void;
   setTrigConditionSetting(trigCondition: TrigCondition, value: boolean): void;
   setNationalParkSetting(nationalPark: NationalPark, value: boolean): void;
-  setAONBSetting(aonb: AONB, value: boolean): void;
+  setAONBSetting(aonb: AreaOfNaturalBeauty, value: boolean): void;
 }
 
 export const useStore = create<State>((set) => ({
@@ -61,7 +67,7 @@ export const useStore = create<State>((set) => ({
       [TrigCondition.Inaccessible]: true,
     },
     nationalParks: {
-      none: true,
+      'n/a': true,
       [NationalPark.Dartmoor]: true,
       [NationalPark.Exmoor]: true,
       [NationalPark.LakeDistrict]: true,
@@ -73,40 +79,40 @@ export const useStore = create<State>((set) => ({
       [NationalPark.YorkshireDales]: true,
     },
     aonbs: {
-      none: true,
-      [AONB.ArnsideSilverdale]: true,
-      [AONB.BlackdownHills]: true,
-      [AONB.CannockChase]: true,
-      [AONB.ChichesterHarbour]: true,
-      [AONB.Chilterns]: true,
-      [AONB.Cornwall]: true,
-      [AONB.Cotswolds]: true,
-      [AONB.CranborneChaseWestWiltshireDowns]: true,
-      [AONB.Dorset]: true,
-      [AONB.EastDevon]: true,
-      [AONB.ForestOfBowland]: true,
-      [AONB.HighWeald]: true,
-      [AONB.HowardianHills]: true,
-      [AONB.IsleOfWight]: true,
-      [AONB.IslesOfScilly]: true,
-      [AONB.KentDowns]: true,
-      [AONB.LincolnshireWolds]: true,
-      [AONB.MalvernHills]: true,
-      [AONB.MendipHills]: true,
-      [AONB.Nidderdale]: true,
-      [AONB.NorfolkCoast]: true,
-      [AONB.NorthDevon]: true,
-      [AONB.NorthPennines]: true,
-      [AONB.NorthWessexDowns]: true,
-      [AONB.NorthumberlandCoast]: true,
-      [AONB.QuantockHills]: true,
-      [AONB.ShropshireHills]: true,
-      [AONB.SolwayCoast]: true,
-      [AONB.SouthDevon]: true,
-      [AONB.SuffolkCoastHeaths]: true,
-      [AONB.SurreyHills]: true,
-      [AONB.TamarValley]: true,
-      [AONB.WyeValley]: true,
+      'n/a': true,
+      [AreaOfNaturalBeauty.ArnsideSilverdale]: true,
+      [AreaOfNaturalBeauty.BlackdownHills]: true,
+      [AreaOfNaturalBeauty.CannockChase]: true,
+      [AreaOfNaturalBeauty.ChichesterHarbour]: true,
+      [AreaOfNaturalBeauty.Chilterns]: true,
+      [AreaOfNaturalBeauty.Cornwall]: true,
+      [AreaOfNaturalBeauty.Cotswolds]: true,
+      [AreaOfNaturalBeauty.CranborneChaseWestWiltshireDowns]: true,
+      [AreaOfNaturalBeauty.Dorset]: true,
+      [AreaOfNaturalBeauty.EastDevon]: true,
+      [AreaOfNaturalBeauty.ForestOfBowland]: true,
+      [AreaOfNaturalBeauty.HighWeald]: true,
+      [AreaOfNaturalBeauty.HowardianHills]: true,
+      [AreaOfNaturalBeauty.IsleOfWight]: true,
+      [AreaOfNaturalBeauty.IslesOfScilly]: true,
+      [AreaOfNaturalBeauty.KentDowns]: true,
+      [AreaOfNaturalBeauty.LincolnshireWolds]: true,
+      [AreaOfNaturalBeauty.MalvernHills]: true,
+      [AreaOfNaturalBeauty.MendipHills]: true,
+      [AreaOfNaturalBeauty.Nidderdale]: true,
+      [AreaOfNaturalBeauty.NorfolkCoast]: true,
+      [AreaOfNaturalBeauty.NorthDevon]: true,
+      [AreaOfNaturalBeauty.NorthPennines]: true,
+      [AreaOfNaturalBeauty.NorthWessexDowns]: true,
+      [AreaOfNaturalBeauty.NorthumberlandCoast]: true,
+      [AreaOfNaturalBeauty.QuantockHills]: true,
+      [AreaOfNaturalBeauty.ShropshireHills]: true,
+      [AreaOfNaturalBeauty.SolwayCoast]: true,
+      [AreaOfNaturalBeauty.SouthDevon]: true,
+      [AreaOfNaturalBeauty.SuffolkCoastHeaths]: true,
+      [AreaOfNaturalBeauty.SurreyHills]: true,
+      [AreaOfNaturalBeauty.TamarValley]: true,
+      [AreaOfNaturalBeauty.WyeValley]: true,
     },
   },
   setTrigPoints: (trigPoints) => set({ trigPoints }),

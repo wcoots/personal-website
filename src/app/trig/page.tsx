@@ -118,10 +118,10 @@ export default function Trig() {
         (trigPoint) =>
           trigSettings.countries[trigPoint.country] &&
           trigSettings.conditions[trigPoint.condition] &&
-          (trigPoint.national_park
+          ((trigPoint.national_park
             ? trigSettings.nationalParks[trigPoint.national_park]
-            : trigSettings.nationalParks.none) &&
-          (trigPoint.aonb ? trigSettings.aonbs[trigPoint.aonb] : trigSettings.aonbs.none),
+            : trigSettings.nationalParks['n/a']) ||
+            (trigPoint.aonb ? trigSettings.aonbs[trigPoint.aonb] : trigSettings.aonbs['n/a'])),
       )
       ?.map((trigPoint): Feature<Point, Properties> => {
         const colour = trigConditionColourMap[trigPoint.condition] || '#808080';

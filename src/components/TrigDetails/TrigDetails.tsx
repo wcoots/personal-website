@@ -34,7 +34,7 @@ const trigDetails: {
     value: (trigPoint) => trigPoint.national_park,
     display: (trigPoint) => !!trigPoint.national_park,
   },
-  { label: 'AONB', value: (trigPoint) => trigPoint.aonb, display: (trigPoint) => !!trigPoint.aonb },
+  { label: 'Area Of Natural Beauty', value: (trigPoint) => trigPoint.aonb, display: (trigPoint) => !!trigPoint.aonb },
 ];
 
 function TrigDetails({ trigPoint }: Props) {
