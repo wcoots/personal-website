@@ -5,7 +5,7 @@ import mapboxgl, { GeoJSONSource, Map as MapboxMap } from 'mapbox-gl';
 
 import { useStore } from '@/store';
 import { TrigTable as TrigPoint } from '@/postgres-schema';
-import { TrigDetails } from '@/components';
+import { TrigDetails, TrigFilter } from '@/components';
 
 import styles from './trig.module.css';
 
@@ -36,7 +36,16 @@ const trigConditionColourMap: { [key: string]: string } = {
 };
 
 export default function Trig() {
-  const { trigPoints, selectedTrigPoint, setTrigPoints, setSelectedTrigPoint } = useStore();
+  const {
+    trigPoints,
+    selectedTrigPoint,
+    trigCountrySettings,
+    trigConditionSettings,
+    nationalParkSettings,
+    aonbSettings,
+    setTrigPoints,
+    setSelectedTrigPoint,
+  } = useStore();
 
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<MapboxMap | null>(null);
@@ -101,6 +110,30 @@ export default function Trig() {
     map.current.on('mouseenter', SELECTED_POINT_LAYER, () => (map.current!.getCanvas().style.cursor = 'pointer'));
     map.current.on('mouseleave', SELECTED_POINT_LAYER, () => (map.current!.getCanvas().style.cursor = 'default'));
   }, []);
+
+  useEffect(() => {
+    const features = trigPoints
+      ?.filter(
+        (trigPoint) =>
+          trigCountrySettings[trigPoint.country] &&
+          trigConditionSettings[trigPoint.condition] &&
+          (trigPoint.national_park ? nationalParkSettings[trigPoint.national_park] : nationalParkSettings.none) &&
+          (trigPoint.aonb ? aonbSettings[trigPoint.aonb] : aonbSettings.none),
+      )
+      ?.map((trigPoint): Feature<Point, Properties> => {
+        const colour = trigConditionColourMap[trigPoint.condition] || '#808080';
+        const properties: Properties = { id: trigPoint.id, colour };
+        const geometry: Point = { type: 'Point', coordinates: [trigPoint.longitude, trigPoint.latitude] };
+
+        return { type: 'Feature', properties, geometry };
+      });
+
+    const featureCollection: FeatureCollection<Point, Properties> = {
+      type: 'FeatureCollection',
+      features: features || [],
+    };
+    map.current?.getSource<GeoJSONSource>(POINT_SOURCE)?.setData(featureCollection);
+  }, [trigPoints, trigCountrySettings, trigConditionSettings, nationalParkSettings, aonbSettings]);
 
   useEffect(() => {
     map.current?.on('click', POINT_LAYER, ({ features, lngLat, originalEvent }) => {
@@ -170,6 +203,7 @@ export default function Trig() {
     <>
       <div ref={mapContainer} className={styles['map-container']} />
       {selectedTrigPoint && <TrigDetails trigPoint={selectedTrigPoint} />}
+      <TrigFilter />
     </>
   );
 }

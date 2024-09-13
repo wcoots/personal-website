@@ -1,114 +1,99 @@
-export type TrigType =
-  | 'Active station'
-  | 'Berntsen'
-  | 'Bolt'
-  | 'Brass Plate'
-  | 'Buried Block'
-  | 'Cannon'
-  | 'Concrete Ring'
-  | 'Curry Stool'
-  | 'Cut'
-  | 'Disc'
-  | 'FBM'
-  | 'Fenomark'
-  | 'Intersected Station'
-  | 'Pillar'
-  | 'Pipe'
-  | 'Platform Bolt'
-  | 'Rivet'
-  | 'Spider'
-  | 'Surface Block'
-  | 'Other';
+export type TrigID = `TP${number}`;
 
-type TrigHistoricUse =
-  | 'Primary'
-  | 'Secondary'
-  | 'Tertiary'
-  | '1st order'
-  | '2nd order'
-  | '3rd order'
-  | '4th order'
-  | '13th order'
-  | 'GPS'
-  | 'Hydrographic Survey Station'
-  | 'Project Emily'
-  | 'Fundamental Benchmark'
-  | 'Great Glen Project'
-  | 'Unknown';
+export enum TrigHistoricUse {
+  Primary = 'Primary',
+  Secondary = 'Secondary',
+  ThirdOrder = '3rd order',
+  FourthOrder = '4th order',
+  ThirteenthOrder = '13th order',
+  HydrographicSurveyStation = 'Hydrographic Survey Station',
+  ProjectEmily = 'Project Emily',
+  GreatGlenProject = 'Great Glen Project',
+  Other = 'Other',
+  Unknown = 'Unknown',
+}
 
-type TrigCurrentUse = 'Active station' | 'Passive station' | 'NCE Adjustment' | 'GPS Station';
+export enum TrigCurrentUse {
+  PassiveStation = 'Passive station',
+  NCEAdjustment = 'NCE Adjustment',
+}
 
-type TrigCondition =
-  | 'Good'
-  | 'Slightly damaged'
-  | 'Damaged'
-  | 'Toppled'
-  | 'Destroyed'
-  | 'Converted'
-  | 'Remains'
-  | 'Not Logged'
-  | 'Unknown'
-  | 'Possibly missing'
-  | 'Moved'
-  | 'Unreachable but visible'
-  | 'Inaccessible';
+export enum TrigCondition {
+  Good = 'Good',
+  SlightlyDamaged = 'Slightly damaged',
+  Damaged = 'Damaged',
+  Toppled = 'Toppled',
+  Destroyed = 'Destroyed',
+  Converted = 'Converted',
+  Remains = 'Remains',
+  Unknown = 'Unknown',
+  PossiblyMissing = 'Possibly missing',
+  Moved = 'Moved',
+  UnreachableButVisible = 'Unreachable but visible',
+  Inaccessible = 'Inaccessible',
+}
 
-type TrigCountry = 'Scotland' | 'Scotland-England' | 'Isle of Man' | 'England' | 'Ireland' | 'Wales-England' | 'Wales';
+export enum TrigCountry {
+  England = 'England',
+  Wales = 'Wales',
+  Scotland = 'Scotland',
+  Ireland = 'Ireland',
+  IsleOfMan = 'Isle of Man',
+}
 
-type NationalPark =
-  | 'exmoor'
-  | 'the broads'
-  | 'south downs'
-  | 'dartmoor'
-  | 'northumberland'
-  | 'new forest'
-  | 'north yorks moors'
-  | 'lake district'
-  | 'yorkshire dales'
-  | 'peak district';
+export enum NationalPark {
+  Dartmoor = 'dartmoor',
+  Exmoor = 'exmoor',
+  LakeDistrict = 'lake district',
+  NewForest = 'new forest',
+  NorthYorksMoors = 'north yorks moors',
+  Northumberland = 'northumberland',
+  PeakDistrict = 'peak district',
+  SouthDowns = 'south downs',
+  YorkshireDales = 'yorkshire dales',
+}
 
-type AONB =
-  | 'east devon'
-  | 'malvern hills'
-  | 'chilterns'
-  | 'howardian hills'
-  | 'cotswolds'
-  | 'wye valley'
-  | 'high weald'
-  | 'lincolnshire wolds'
-  | 'northumberland coast'
-  | 'mendip hills'
-  | 'forest of bowland'
-  | 'north pennines'
-  | 'tamar valley'
-  | 'isles of scilly'
-  | 'cranborne chase & west wiltshire downs'
-  | 'shropshire hills'
-  | 'surrey hills'
-  | 'dorset'
-  | 'cornwall'
-  | 'chichester harbour'
-  | 'arnside & silverdale'
-  | 'south devon'
-  | 'quantock hills'
-  | 'blackdown hills'
-  | 'north devon'
-  | 'norfolk coast'
-  | 'suffolk coast & heaths'
-  | 'north wessex downs'
-  | 'kent downs'
-  | 'cannock chase'
-  | 'solway coast'
-  | 'dedham vale'
-  | 'nidderdale'
-  | 'isle of wight';
+export enum AONB {
+  ArnsideSilverdale = 'arnside & silverdale',
+  BlackdownHills = 'blackdown hills',
+  CannockChase = 'cannock chase',
+  ChichesterHarbour = 'chichester harbour',
+  Chilterns = 'chilterns',
+  Cornwall = 'cornwall',
+  Cotswolds = 'cotswolds',
+  CranborneChaseWestWiltshireDowns = 'cranborne chase & west wiltshire downs',
+  Dorset = 'dorset',
+  EastDevon = 'east devon',
+  ForestOfBowland = 'forest of bowland',
+  HighWeald = 'high weald',
+  HowardianHills = 'howardian hills',
+  IsleOfWight = 'isle of wight',
+  IslesOfScilly = 'isles of scilly',
+  KentDowns = 'kent downs',
+  LincolnshireWolds = 'lincolnshire wolds',
+  MalvernHills = 'malvern hills',
+  MendipHills = 'mendip hills',
+  Nidderdale = 'nidderdale',
+  NorfolkCoast = 'norfolk coast',
+  NorthDevon = 'north devon',
+  NorthPennines = 'north pennines',
+  NorthWessexDowns = 'north wessex downs',
+  NorthumberlandCoast = 'northumberland coast',
+  QuantockHills = 'quantock hills',
+  ShropshireHills = 'shropshire hills',
+  SolwayCoast = 'solway coast',
+  SouthDevon = 'south devon',
+  SuffolkCoastHeaths = 'suffolk coast & heaths',
+  SurreyHills = 'surrey hills',
+  TamarValley = 'tamar valley',
+  WyeValley = 'wye valley',
+}
 
 export interface TrigTable {
-  id: `TP${number}`;
+  id: TrigID;
   name: string;
   latitude: number;
   longitude: number;
-  type: TrigType;
   historic_use: TrigHistoricUse | null;
   current_use: TrigCurrentUse | null;
   condition: TrigCondition;

@@ -1,0 +1,13 @@
+.container {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  background-color: white;
+  width: 20rem;
+  display: grid;
+  padding: 1rem;
+}
+
+.label {
+  text-transform: capitalize;
+}

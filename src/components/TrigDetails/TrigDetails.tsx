@@ -10,6 +10,7 @@ const trigDetails: {
   value(trigPoint: TrigPoint): string | null;
   display?(trigPoint: TrigPoint): boolean;
 }[] = [
+  { label: 'ID', value: (trigPoint) => trigPoint.id },
   { label: 'Condition', value: (trigPoint) => trigPoint.condition },
   { label: 'Position', value: (trigPoint) => `[${trigPoint.latitude}, ${trigPoint.longitude}]` },
   { label: 'Country', value: (trigPoint) => trigPoint.country },
