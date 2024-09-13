@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import { Feature, FeatureCollection, Point } from 'geojson';
-import mapboxgl, { Map as MapboxMap } from 'mapbox-gl';
+import mapboxgl, { GeoJSONSource, Map as MapboxMap } from 'mapbox-gl';
 
 import { useStore } from '@/store';
 import { TrigTable as TrigPoint } from '@/postgres-schema';
@@ -95,12 +95,18 @@ export default function Trig() {
         });
       }
     });
+
+    map.current.on('mouseenter', POINT_LAYER, () => (map.current!.getCanvas().style.cursor = 'pointer'));
+    map.current.on('mouseleave', POINT_LAYER, () => (map.current!.getCanvas().style.cursor = 'default'));
+    map.current.on('mouseenter', SELECTED_POINT_LAYER, () => (map.current!.getCanvas().style.cursor = 'pointer'));
+    map.current.on('mouseleave', SELECTED_POINT_LAYER, () => (map.current!.getCanvas().style.cursor = 'default'));
   }, []);
 
   useEffect(() => {
-    map.current?.on('click', POINT_LAYER, ({ features, lngLat }) => {
-      const selectedPointSource = map.current?.getSource(SELECTED_POINT_SOURCE);
-      if (selectedPointSource?.type !== 'geojson') return;
+    map.current?.on('click', POINT_LAYER, ({ features, lngLat, originalEvent }) => {
+      originalEvent.preventDefault();
+
+      const selectedPointSource = map.current?.getSource<GeoJSONSource>(SELECTED_POINT_SOURCE);
 
       if (features?.length === 1) {
         const [feature] = features;
@@ -115,18 +121,27 @@ export default function Trig() {
           features: [{ type: 'Feature', properties, geometry }],
         };
 
+        map.current?.easeTo({ center: lngLat });
         setSelectedTrigPoint(trigPoint);
-        selectedPointSource.setData(featureCollection);
+        selectedPointSource?.setData(featureCollection);
       } else {
         if (features && features?.length > 1) {
           const currentZoom = map.current?.getZoom();
           if (!currentZoom) return;
-          map.current?.flyTo({ center: lngLat, zoom: currentZoom + 2 });
+          map.current?.easeTo({ center: lngLat, zoom: currentZoom + 2 });
         }
 
         setSelectedTrigPoint(null);
-        selectedPointSource.setData({ type: 'FeatureCollection', features: [] });
+        selectedPointSource?.setData({ type: 'FeatureCollection', features: [] });
       }
+    });
+
+    map.current?.on('click', ({ originalEvent }) => {
+      if (originalEvent.defaultPrevented) return;
+      setSelectedTrigPoint(null);
+      map.current
+        ?.getSource<GeoJSONSource>(SELECTED_POINT_SOURCE)
+        ?.setData({ type: 'FeatureCollection', features: [] });
     });
   }, [trigPoints, setSelectedTrigPoint]);
 
@@ -145,9 +160,7 @@ export default function Trig() {
       });
 
       const featureCollection: FeatureCollection<Point, Properties> = { type: 'FeatureCollection', features };
-
-      const pointSource = map.current?.getSource(POINT_SOURCE);
-      if (pointSource?.type === 'geojson') pointSource.setData(featureCollection);
+      map.current?.getSource<GeoJSONSource>(POINT_SOURCE)?.setData(featureCollection);
     }
 
     getTrigPoints();

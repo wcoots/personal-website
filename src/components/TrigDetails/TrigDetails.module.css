@@ -7,3 +7,7 @@
   right: calc((100svh - 45rem) / 2);
   padding: 2rem;
 }
+
+.field {
+  text-transform: capitalize;
+}

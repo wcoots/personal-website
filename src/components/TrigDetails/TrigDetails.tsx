@@ -44,7 +44,7 @@ function TrigDetails({ trigPoint }: Props) {
         if (display && !display(trigPoint)) return null;
         return (
           <p key={label}>
-            <b>{label}:</b> {value(trigPoint)}
+            <b>{label}:</b> <span className={styles.field}>{value(trigPoint)}</span>
           </p>
         );
       })}
