@@ -1,0 +1,6 @@
+.map-container {
+  height: 45rem;
+  width: 40rem;
+  padding-top: calc((100svh - 45rem) / 2);
+  padding-left: calc((100svh - 45rem) / 2);
+}
