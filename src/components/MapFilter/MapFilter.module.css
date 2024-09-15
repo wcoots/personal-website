@@ -3,11 +3,27 @@
   top: 2rem;
   right: 2rem;
   background-color: white;
-  width: 20rem;
+  width: 25rem;
   display: grid;
   padding: 1rem;
+  height: calc(100svh - 6rem);
+  overflow: scroll;
 }
 
 .label {
   text-transform: capitalize;
+  margin-left: 2rem;
+}
+
+.settings-container {
+  display: grid;
+}
+
+.settings-item-summary {
+  margin-bottom: 0.5rem;
+}
+
+.settings-child-item-summary {
+  margin-top: 0.5rem;
+  margin-left: 1rem;
 }

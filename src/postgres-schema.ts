@@ -105,5 +105,5 @@ export interface TrigTable {
 }
 
 export interface Database {
-  'database.trig': TrigTable;
+  'database.trig_pillars': TrigTable;
 }

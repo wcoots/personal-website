@@ -4,7 +4,7 @@ import { Feature, FeatureCollection, Point } from 'geojson';
 import mapboxgl, { GeoJSONSource, Map as MapboxMap } from 'mapbox-gl';
 
 import { useStore } from '@/store';
-import { TrigTable as TrigPoint } from '@/postgres-schema';
+import { AreaOfNaturalBeauty, NationalPark, TrigTable as TrigPoint } from '@/postgres-schema';
 import { TrigDetails, MapFilter } from '@/components';
 
 import styles from './trig.module.css';
@@ -36,17 +36,7 @@ const trigConditionColourMap: { [key: string]: string } = {
 };
 
 export default function Trig() {
-  const {
-    trigPoints,
-    selectedTrigPoint,
-    trigSettings,
-    // trigCountrySettings,
-    // trigConditionSettings,
-    // nationalParkSettings,
-    // aonbSettings,
-    setTrigPoints,
-    setSelectedTrigPoint,
-  } = useStore();
+  const { trigPoints, selectedTrigPoint, trigSettings, setTrigPoints, setSelectedTrigPoint } = useStore();
 
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<MapboxMap | null>(null);
@@ -114,15 +104,21 @@ export default function Trig() {
 
   useEffect(() => {
     const features = trigPoints
-      ?.filter(
-        (trigPoint) =>
-          trigSettings.countries[trigPoint.country] &&
-          trigSettings.conditions[trigPoint.condition] &&
-          ((trigPoint.national_park
-            ? trigSettings.nationalParks[trigPoint.national_park]
-            : trigSettings.nationalParks['n/a']) ||
-            (trigPoint.aonb ? trigSettings.aonbs[trigPoint.aonb] : trigSettings.aonbs['n/a'])),
-      )
+      ?.filter((trigPoint) => {
+        if (!trigSettings.trig) return false;
+
+        const validCountry = trigSettings.countries[trigPoint.country];
+        const validCondition = trigSettings.conditions[trigPoint.condition];
+
+        const validNationalParkOrAreaOfNaturalBeauty =
+          trigPoint.national_park || trigPoint.aonb
+            ? trigSettings.nationalParksAndAreasOfNaturalBeauty[
+                (trigPoint.national_park || trigPoint.aonb) as NationalPark | AreaOfNaturalBeauty
+              ]
+            : trigSettings.nationalParksAndAreasOfNaturalBeauty['n/a'];
+
+        return validCountry && validCondition && validNationalParkOrAreaOfNaturalBeauty;
+      })
       ?.map((trigPoint): Feature<Point, Properties> => {
         const colour = trigConditionColourMap[trigPoint.condition] || '#808080';
         const properties: Properties = { id: trigPoint.id, colour };

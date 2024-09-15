@@ -16,35 +16,37 @@ export type TrigConditionSettings = {
   [key in TrigCondition]: boolean;
 };
 
-export type NationalParkSettings = {
-  [key in NationalPark]: boolean;
+export type NationalParkAndAreaOfNaturalBeautySettings = {
+  [key in NationalPark | AreaOfNaturalBeauty]: boolean;
 } & { 'n/a': boolean };
 
-export type AONBSettings = {
-  [key in AreaOfNaturalBeauty]: boolean;
-} & { 'n/a': boolean };
+export type Settings = TrigConditionSettings | TrigCountrySettings | NationalParkAndAreaOfNaturalBeautySettings;
 
 interface State {
   trigPoints: TrigPoint[] | null;
   selectedTrigPoint: TrigPoint | null;
   trigSettings: {
+    trig: boolean;
     countries: TrigCountrySettings;
     conditions: TrigConditionSettings;
-    nationalParks: NationalParkSettings;
-    aonbs: AONBSettings;
+    nationalParksAndAreasOfNaturalBeauty: NationalParkAndAreaOfNaturalBeautySettings;
   };
   setTrigPoints(trigPoints: TrigPoint[]): void;
   setSelectedTrigPoint(trigPoint: TrigPoint | null): void;
+  setTrigSetting(value: boolean): void;
   setTrigCountrySetting(trigCountry: TrigCountry, value: boolean): void;
   setTrigConditionSetting(trigCondition: TrigCondition, value: boolean): void;
-  setNationalParkSetting(nationalPark: NationalPark, value: boolean): void;
-  setAONBSetting(aonb: AreaOfNaturalBeauty, value: boolean): void;
+  setNationalParkAndAreaOfNaturalBeautySetting(
+    nationalParkOrAreaOfNaturalBeauty: NationalPark | AreaOfNaturalBeauty,
+    value: boolean,
+  ): void;
 }
 
 export const useStore = create<State>((set) => ({
   trigPoints: null,
   selectedTrigPoint: null,
   trigSettings: {
+    trig: true,
     countries: {
       [TrigCountry.England]: true,
       [TrigCountry.Wales]: true,
@@ -66,7 +68,7 @@ export const useStore = create<State>((set) => ({
       [TrigCondition.UnreachableButVisible]: true,
       [TrigCondition.Inaccessible]: true,
     },
-    nationalParks: {
+    nationalParksAndAreasOfNaturalBeauty: {
       'n/a': true,
       [NationalPark.Dartmoor]: true,
       [NationalPark.Exmoor]: true,
@@ -77,9 +79,6 @@ export const useStore = create<State>((set) => ({
       [NationalPark.PeakDistrict]: true,
       [NationalPark.SouthDowns]: true,
       [NationalPark.YorkshireDales]: true,
-    },
-    aonbs: {
-      'n/a': true,
       [AreaOfNaturalBeauty.ArnsideSilverdale]: true,
       [AreaOfNaturalBeauty.BlackdownHills]: true,
       [AreaOfNaturalBeauty.CannockChase]: true,
@@ -117,6 +116,12 @@ export const useStore = create<State>((set) => ({
   },
   setTrigPoints: (trigPoints) => set({ trigPoints }),
   setSelectedTrigPoint: (selectedTrigPoint) => set({ selectedTrigPoint }),
+  setTrigSetting: (value) =>
+    set(
+      produce<State>((state) => {
+        state.trigSettings.trig = value;
+      }),
+    ),
   setTrigCountrySetting: (trigCountry, value) =>
     set(
       produce<State>((state) => {
@@ -129,16 +134,10 @@ export const useStore = create<State>((set) => ({
         state.trigSettings.conditions[trigCondition] = value;
       }),
     ),
-  setNationalParkSetting: (nationalPark, value) =>
+  setNationalParkAndAreaOfNaturalBeautySetting: (nationalParkOrAreaOfNaturalBeauty, value) =>
     set(
       produce<State>((state) => {
-        state.trigSettings.nationalParks[nationalPark] = value;
-      }),
-    ),
-  setAONBSetting: (aonb, value) =>
-    set(
-      produce<State>((state) => {
-        state.trigSettings.aonbs[aonb] = value;
+        state.trigSettings.nationalParksAndAreasOfNaturalBeauty[nationalParkOrAreaOfNaturalBeauty] = value;
       }),
     ),
 }));

@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(): Promise<NextResponse<TrigPoint[]>> {
   const trigPoints = await db
-    .selectFrom('database.trig')
+    .selectFrom('database.trig_pillars')
     .select([
       'id',
       'name',
