@@ -24,7 +24,6 @@ export default function Home() {
           <IconButton identifier="github" />
           <IconButton identifier="linkedin" />
           <IconButton identifier="map" />
-          <IconButton identifier="dashboard" />
         </div>
         <div className={styles.section}>{greeting}</div>
       </div>

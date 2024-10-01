@@ -1,0 +1,12 @@
+.container {
+  position: absolute;
+  width: 23rem;
+  background-color: aliceblue;
+  bottom: 2rem;
+  right: 2rem;
+  padding: 2rem;
+}
+
+.field {
+  text-transform: capitalize;
+}
