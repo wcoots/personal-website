@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { Feature, FeatureCollection, Point } from 'geojson';
 import mapboxgl, { GeoJSONSource, Map as MapboxMap } from 'mapbox-gl';
 
@@ -40,6 +40,11 @@ export default function Trig() {
 
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<MapboxMap | null>(null);
+
+  const clearSelectedTrigPoint = useCallback(() => {
+    setSelectedTrigPoint(null);
+    map.current?.getSource<GeoJSONSource>(SELECTED_POINT_SOURCE)?.setData({ type: 'FeatureCollection', features: [] });
+  }, [setSelectedTrigPoint]);
 
   useEffect(() => {
     if (map.current || !mapContainer.current) return;
@@ -127,12 +132,16 @@ export default function Trig() {
         return { type: 'Feature', properties, geometry };
       });
 
+    if (!features?.find((feature) => feature.properties.id === selectedTrigPoint?.id)) {
+      clearSelectedTrigPoint();
+    }
+
     const featureCollection: FeatureCollection<Point, Properties> = {
       type: 'FeatureCollection',
       features: features || [],
     };
     map.current?.getSource<GeoJSONSource>(POINT_SOURCE)?.setData(featureCollection);
-  }, [trigPoints, trigSettings]);
+  }, [trigPoints, trigSettings, selectedTrigPoint, clearSelectedTrigPoint]);
 
   useEffect(() => {
     map.current?.on('click', POINT_LAYER, ({ features, lngLat, originalEvent }) => {
@@ -163,8 +172,7 @@ export default function Trig() {
           map.current?.easeTo({ center: lngLat, zoom: currentZoom + 2 });
         }
 
-        setSelectedTrigPoint(null);
-        selectedPointSource?.setData({ type: 'FeatureCollection', features: [] });
+        clearSelectedTrigPoint();
       }
     });
 
@@ -175,7 +183,7 @@ export default function Trig() {
         ?.getSource<GeoJSONSource>(SELECTED_POINT_SOURCE)
         ?.setData({ type: 'FeatureCollection', features: [] });
     });
-  }, [trigPoints, setSelectedTrigPoint]);
+  }, [trigPoints, setSelectedTrigPoint, clearSelectedTrigPoint]);
 
   useEffect(() => {
     async function getTrigPoints() {

@@ -6,7 +6,7 @@
   width: 25rem;
   display: grid;
   padding: 1rem;
-  height: calc(100svh - 6rem);
+  height: calc(100svh - 30rem);
   overflow: scroll;
 }
 
