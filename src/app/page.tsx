@@ -23,7 +23,7 @@ export default function Home() {
         <div className={styles.section}>
           <IconButton identifier="github" />
           <IconButton identifier="linkedin" />
-          {/* <IconButton identifier="map" /> */}
+          <IconButton identifier="map" />
         </div>
         <div className={styles.section}>{greeting}</div>
       </div>
