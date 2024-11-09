@@ -2,7 +2,7 @@ import Link from 'next/link';
 import styles from './IconButton.module.css';
 import { HTMLAttributeAnchorTarget } from 'react';
 
-type IconType = 'github' | 'linkedin' | 'map';
+type IconType = 'github' | 'linkedin' | 'motorcycle';
 
 interface Props {
   identifier: IconType;
@@ -11,7 +11,7 @@ interface Props {
 const iconSvgs: { [iconType in IconType]: { path: string; url: string; target: HTMLAttributeAnchorTarget } } = {
   github: { path: '/github.svg', url: 'https://github.com/wcoots', target: '_blank' },
   linkedin: { path: '/linkedin.svg', url: 'https://www.linkedin.com/in/wcoots/', target: '_blank' },
-  map: { path: '/map.svg', url: '/trig', target: '_self' },
+  motorcycle: { path: '/motorcycle.svg', url: '/roadtrips', target: '_self' },
 };
 
 function IconButton({ identifier }: Props) {
