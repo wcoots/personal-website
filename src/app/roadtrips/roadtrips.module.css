@@ -1,0 +1,23 @@
+.mapContainer {
+  height: calc(100svh - 6rem);
+  width: 50svw;
+  padding: 2rem;
+}
+
+.roadtripPanelContainer {
+  position: fixed;
+  right: 0;
+  top: 0;
+  display: flex;
+  padding-top: 2rem;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.roadtripPanel {
+  width: calc(50svw - 14rem);
+  margin: 0 2rem 2rem;
+  padding: 1rem 2rem;
+  background-color: antiquewhite;
+  cursor: pointer;
+}
