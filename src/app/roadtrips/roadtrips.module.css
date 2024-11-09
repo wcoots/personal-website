@@ -1,7 +1,7 @@
 .mapContainer {
-  height: calc(100svh - 6rem);
+  height: calc(100svh - 4rem);
   width: 50svw;
-  padding: 2rem;
+  margin: 2rem;
 }
 
 .roadtripPanelContainer {
@@ -15,9 +15,13 @@
 }
 
 .roadtripPanel {
-  width: calc(50svw - 14rem);
+  width: calc(50svw - 10rem);
   margin: 0 2rem 2rem;
   padding: 1rem 2rem;
   background-color: antiquewhite;
   cursor: pointer;
+}
+
+.selectedRoadtripPanel {
+  background-color: palegreen;
 }

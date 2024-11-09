@@ -1,17 +1,22 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { Feature, FeatureCollection, Point } from 'geojson';
-import mapboxgl, { GeoJSONSource, Map as MapboxMap } from 'mapbox-gl';
+import { Feature, FeatureCollection } from 'geojson';
+import mapboxgl, { GeoJSONSource, LngLat, Map as MapboxMap, MapMouseEvent } from 'mapbox-gl';
 
 import { useStore } from '@/store';
-import { Roadtrip, Locale } from '@/types';
+import { Roadtrip, Locale, Image } from '@/types';
 
 import styles from './roadtrips.module.css';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import classNames from 'classnames';
+import { isPointFeature } from '@/utils';
 
 const ROUTE_SOURCE = 'route-source';
 const MARKER_SOURCE = 'marker-source';
+const IMAGE_SOURCE = 'image-source';
 const ROUTE_LAYER = 'route-layer';
 const MARKER_LAYER = 'marker-layer';
+const IMAGE_LAYER = 'image-layer';
 
 interface Properties {}
 
@@ -19,6 +24,7 @@ export default function Trig() {
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<MapboxMap | null>(null);
   const [loadingLocales, setLoadingLocales] = useState(false);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
   const { roadtrips, selectedRoadtripId, setRoadTrips, setSelectedRoadtripId, setRoadtripLocales } = useStore();
 
@@ -55,6 +61,10 @@ export default function Trig() {
         map.current.addSource(MARKER_SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
       }
 
+      if (!map.current.getSource(IMAGE_SOURCE)) {
+        map.current.addSource(IMAGE_SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+      }
+
       if (!map.current.getLayer(ROUTE_LAYER)) {
         map.current.addLayer({
           id: ROUTE_LAYER,
@@ -72,31 +82,39 @@ export default function Trig() {
           paint: { 'circle-radius': 6, 'circle-color': 'green', 'circle-stroke-width': 2 },
         });
       }
-    });
 
-    // map.current.on('mouseenter', ROUTE_LAYER, () => (map.current!.getCanvas().style.cursor = 'pointer'));
-    // map.current.on('mouseleave', ROUTE_LAYER, () => (map.current!.getCanvas().style.cursor = 'default'));
-  }, []);
+      if (!map.current.getLayer(IMAGE_LAYER)) {
+        map.current.addLayer({
+          id: IMAGE_LAYER,
+          source: IMAGE_SOURCE,
+          type: 'circle',
+          paint: { 'circle-radius': 4, 'circle-color': 'red', 'circle-stroke-width': 2 },
+        });
+      }
 
-  useEffect(() => {
-    const features: Feature<Point, Properties>[] = [];
+      const popup = new mapboxgl.Popup({ closeButton: false, closeOnClick: false, maxWidth: '420px' });
 
-    const featureCollection: FeatureCollection<Point, Properties> = {
-      type: 'FeatureCollection',
-      features,
-    };
-    map.current?.getSource<GeoJSONSource>(ROUTE_SOURCE)?.setData(featureCollection);
-  }, []);
+      map.current.on('mouseenter', IMAGE_LAYER, (event: MapMouseEvent) => {
+        if (!map.current) return;
 
-  useEffect(() => {
-    map.current?.on('click', ROUTE_LAYER, ({ features, lngLat, originalEvent }) => {
-      originalEvent.preventDefault();
-      console.log('click', features, lngLat);
-    });
+        map.current.getCanvas().style.cursor = 'pointer';
 
-    map.current?.on('click', ({ originalEvent }) => {
-      if (originalEvent.defaultPrevented) return;
-      console.log('click', originalEvent);
+        if (!event.features?.length) return;
+
+        const [feature] = event.features;
+
+        if (!isPointFeature(feature)) return;
+
+        const coordinates = new LngLat(feature.geometry.coordinates[0], feature.geometry.coordinates[1]);
+        const { html } = feature.properties!;
+
+        popup.setLngLat(coordinates).setHTML(html).addTo(map.current);
+      });
+
+      map.current.on('mouseleave', IMAGE_LAYER, () => {
+        map.current!.getCanvas().style.cursor = '';
+        popup.remove();
+      });
     });
   }, []);
 
@@ -113,42 +131,82 @@ export default function Trig() {
   async function getRoadtripPositions(id: number) {
     if (id === selectedRoadtripId) return;
 
+    // clear previous interval and sourcea
+
+    if (intervalId) {
+      clearInterval(intervalId);
+      setIntervalId(null);
+    }
+
+    setRoadtripLocales(null);
+    map.current?.getSource<GeoJSONSource>(ROUTE_SOURCE)?.setData({ type: 'FeatureCollection', features: [] });
+    map.current?.getSource<GeoJSONSource>(MARKER_SOURCE)?.setData({ type: 'FeatureCollection', features: [] });
+
+    // get selected roadtrip positions
+
     setLoadingLocales(true);
     setSelectedRoadtripId(id);
 
     const response = await fetch(`/api/roadtrip/get/${id}`, { method: 'GET' });
-    const responseJson: Locale[] = await response.json();
-    setRoadtripLocales(responseJson);
+    const { locales, images }: { locales: Locale[]; images: Image[] } = await response.json();
+    setRoadtripLocales(locales);
 
-    const coordinates = responseJson.map((locale) => [locale.position.lng, locale.position.lat]);
+    // add roadtrip positions to map
 
-    const featureCollection: FeatureCollection = {
+    const coordinates = locales.map((locale) => [locale.position.lng, locale.position.lat]);
+
+    const routeFeatureCollection: FeatureCollection = {
       type: 'FeatureCollection',
       features: [{ type: 'Feature', geometry: { type: 'LineString', coordinates }, properties: {} }],
     };
 
-    map.current?.getSource<GeoJSONSource>(ROUTE_SOURCE)?.setData(featureCollection);
+    map.current?.getSource<GeoJSONSource>(ROUTE_SOURCE)?.setData(routeFeatureCollection);
+
+    // add image markers to map
+
+    const imageFeatures: Feature[] = images.map((image) => {
+      return {
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [image.position.lng, image.position.lat] },
+        properties: {
+          html: `<img src="${image.url}" alt="${image.description}" width="${image.width}" /><p>${image.description}</p>`,
+        },
+      };
+    });
+
+    const imageFeatureCollection: FeatureCollection = { type: 'FeatureCollection', features: imageFeatures };
+
+    map.current?.getSource<GeoJSONSource>(IMAGE_SOURCE)?.setData(imageFeatureCollection);
 
     setLoadingLocales(false);
 
-    let i = 0;
+    // add a moving marker to map
 
-    setInterval(() => {
-      console.log('interval', i);
-      if (i >= responseJson.length) return;
+    let index = 0;
 
-      const { position } = responseJson[i];
+    const currentIntervalId = setInterval(() => {
+      if (index >= locales.length) return;
+
+      const { position } = locales[index];
       const coordinates = [position.lng, position.lat];
 
-      const featureCollection: FeatureCollection = {
+      const markerFeatureCollection: FeatureCollection = {
         type: 'FeatureCollection',
         features: [{ type: 'Feature', geometry: { type: 'Point', coordinates }, properties: {} }],
       };
 
-      map.current?.getSource<GeoJSONSource>(MARKER_SOURCE)?.setData(featureCollection);
+      map.current?.getSource<GeoJSONSource>(MARKER_SOURCE)?.setData(markerFeatureCollection);
 
-      i++;
-    }, 10);
+      index++;
+
+      if (index === locales.length) {
+        clearInterval(currentIntervalId);
+        setIntervalId(null);
+        map.current?.getSource<GeoJSONSource>(MARKER_SOURCE)?.setData({ type: 'FeatureCollection', features: [] });
+      }
+    }, 1);
+
+    setIntervalId(currentIntervalId);
   }
 
   return (
@@ -159,7 +217,9 @@ export default function Trig() {
           {roadtrips?.map((roadtrip) => (
             <div
               key={roadtrip.id}
-              className={styles.roadtripPanel}
+              className={classNames(styles.roadtripPanel, {
+                [styles.selectedRoadtripPanel]: roadtrip.id === selectedRoadtripId,
+              })}
               onClick={() => !loadingLocales && getRoadtripPositions(roadtrip.id)}
             >
               <h1>{roadtrip.name}</h1>

@@ -15,7 +15,17 @@ export interface RoadtripPositionsTable {
   timestamp: string; // date
 }
 
+export interface RoadtripImages {
+  id: GeneratedAlways<number>;
+  roadtrip_id: number;
+  uuid: string;
+  position: Point;
+  description: string;
+  orientation: 'landscape' | 'portrait';
+}
+
 export interface Database {
   'database.roadtrips': RoadtripsTable;
   'database.roadtrip_positions': RoadtripPositionsTable;
+  'database.roadtrip_images': RoadtripImages;
 }
