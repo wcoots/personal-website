@@ -75,8 +75,8 @@ export default function Trig() {
         map.current.addLayer({
           id: MARKER_LAYER,
           source: MARKER_SOURCE,
-          type: 'circle',
-          paint: { 'circle-radius': 6, 'circle-color': 'green', 'circle-stroke-width': 2 },
+          type: 'symbol',
+          layout: { 'icon-image': ['get', 'icon'], 'icon-size': 0.15, 'icon-allow-overlap': true },
         });
       }
 
@@ -88,6 +88,16 @@ export default function Trig() {
           paint: { 'circle-radius': 4, 'circle-color': 'red', 'circle-stroke-width': 2 },
         });
       }
+
+      map.current?.loadImage(`/bike-left.png`, (error, image) => {
+        if (error) return;
+        if (image) map.current?.addImage('bike-left', image);
+      });
+
+      map.current?.loadImage(`/bike-right.png`, (error, image) => {
+        if (error) return;
+        if (image) map.current?.addImage('bike-right', image);
+      });
 
       const popup = new mapboxgl.Popup({ closeButton: false, closeOnClick: false, maxWidth: '420px' });
 
@@ -192,25 +202,46 @@ export default function Trig() {
 
     // add a moving marker to map
 
-    let index = 0;
+    const markerConfig = { index: 0, left: 0, right: 0, icon: 'bike-right' };
 
     const currentIntervalId = setInterval(() => {
-      if (index >= locales.length) return;
+      markerConfig.index++;
+      if (markerConfig.index >= locales.length) return;
 
       const {
         position: { coordinates },
-      } = locales[index];
+      } = locales[markerConfig.index];
+
+      const {
+        position: { coordinates: previousCoordinates },
+      } = locales[markerConfig.index - 1];
+
+      if (coordinates[0] > previousCoordinates[0]) {
+        markerConfig.right++;
+      } else {
+        markerConfig.left++;
+      }
+
+      if (markerConfig.right > 500) {
+        markerConfig.icon = 'bike-right';
+        markerConfig.right = 0;
+        markerConfig.left = 0;
+      } else if (markerConfig.left > 500) {
+        markerConfig.icon = 'bike-left';
+        markerConfig.right = 0;
+        markerConfig.left = 0;
+      }
 
       const markerFeatureCollection: FeatureCollection = {
         type: 'FeatureCollection',
-        features: [{ type: 'Feature', geometry: { type: 'Point', coordinates }, properties: {} }],
+        features: [
+          { type: 'Feature', geometry: { type: 'Point', coordinates }, properties: { icon: markerConfig.icon } },
+        ],
       };
 
       map.current?.getSource<GeoJSONSource>(MARKER_SOURCE)?.setData(markerFeatureCollection);
 
-      index++;
-
-      if (index === locales.length) {
+      if (markerConfig.index === locales.length) {
         clearInterval(currentIntervalId);
         setIntervalId(null);
         map.current?.getSource<GeoJSONSource>(MARKER_SOURCE)?.setData({ type: 'FeatureCollection', features: [] });
