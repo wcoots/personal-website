@@ -9,7 +9,7 @@ import { Roadtrip, Locale, Marker } from '@/types';
 import styles from './roadtrips.module.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import classNames from 'classnames';
-import { isPointFeature } from '@/utils';
+import { isMobile, isPointFeature } from '@/utils';
 
 const ROUTE_SOURCE = 'route-source';
 const POSITION_SOURCE = 'position-source';
@@ -21,6 +21,7 @@ const MARKER_LAYER = 'marker-layer';
 export default function Trig() {
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const map = useRef<MapboxMap | null>(null);
+  const fullWidth = !isMobile();
   const [loadingLocales, setLoadingLocales] = useState(false);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
@@ -258,13 +259,26 @@ export default function Trig() {
 
   return (
     <>
-      <div ref={mapContainer} className={styles.mapContainer} />
+      <div
+        ref={mapContainer}
+        className={classNames({
+          [styles.mapContainer]: fullWidth,
+          [styles.mapContainerMobile]: !fullWidth,
+        })}
+      />
       {roadtrips?.length && (
-        <div className={styles.roadtripPanelContainer}>
+        <div
+          className={classNames({
+            [styles.roadtripPanelContainer]: fullWidth,
+            [styles.roadtripPanelContainerMobile]: !fullWidth,
+          })}
+        >
           {roadtrips?.map((roadtrip) => (
             <div
               key={roadtrip.id}
-              className={classNames(styles.roadtripPanel, {
+              className={classNames({
+                [styles.roadtripPanel]: fullWidth,
+                [styles.roadtripPanelMobile]: !fullWidth,
                 [styles.selectedRoadtripPanel]: roadtrip.id === selectedRoadtripId,
               })}
               onClick={() => !loadingLocales && getRoadtripPositions(roadtrip.id)}

@@ -4,6 +4,12 @@
   margin: 2rem;
 }
 
+.mapContainerMobile {
+  height: calc(70svh);
+  width: calc(100svw - 2rem);
+  margin: 1rem;
+}
+
 .roadtripPanelContainer {
   height: calc(100svh - 2rem);
   position: fixed;
@@ -16,10 +22,29 @@
   overflow-y: scroll;
 }
 
+.roadtripPanelContainerMobile {
+  height: calc(30svh - 2rem);
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  overflow-y: scroll;
+}
+
 .roadtripPanel {
   width: calc(50svw - 10rem);
   margin: 0 2rem 2rem;
   padding: 1rem 2rem;
+  background-color: antiquewhite;
+  cursor: pointer;
+}
+
+.roadtripPanelMobile {
+  width: calc(100svw - 4rem);
+  margin: 0rem 1rem 1rem;
+  padding: 0rem 1rem;
   background-color: antiquewhite;
   cursor: pointer;
 }
