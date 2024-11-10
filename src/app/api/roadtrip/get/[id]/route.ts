@@ -4,12 +4,14 @@ import { Point } from 'geojson';
 import { sql } from 'kysely';
 
 import { db } from '@/app/api/kysely';
-import { Image, Locale } from '@/types';
+import { Marker, Locale } from '@/types';
+
+export const fetchCache = 'force-no-store';
 
 export async function GET(_: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse> {
   const id = parseInt(params.id);
 
-  const [locales, roadtripImages, { blobs }] = await Promise.all([
+  const [locales, rawMarkers, { blobs }] = await Promise.all([
     db
       .selectFrom('database.roadtrip_positions')
       .select((eb) => [
@@ -20,13 +22,14 @@ export async function GET(_: NextRequest, { params }: { params: { id: string } }
       .orderBy('timestamp asc')
       .execute() as Promise<Locale[]>,
     db
-      .selectFrom('database.roadtrip_images')
+      .selectFrom('database.roadtrip_markers')
       .select((eb) => [
         'id',
         'roadtrip_id',
-        'uuid',
+        'image_uuid',
         'description',
-        'orientation',
+        'image_orientation',
+        'icon_type',
         sql`${eb.fn('ST_AsGeoJSON', [eb.ref('position')])}::json`.$castTo<Point>().as('position'),
       ])
       .where('roadtrip_id', '=', id)
@@ -34,16 +37,15 @@ export async function GET(_: NextRequest, { params }: { params: { id: string } }
     list(),
   ]);
 
-  const images: Image[] = roadtripImages
-    .map((image) => ({
-      id: image.id,
-      roadtripId: image.roadtrip_id,
-      url: blobs.find((blob) => blob.pathname === image.uuid)?.url!,
-      position: image.position,
-      description: image.description,
-      width: image.orientation === 'landscape' ? 300 : 200,
-    }))
-    .filter((image) => !!image.url);
+  const markers: Marker[] = rawMarkers.map((marker) => ({
+    id: marker.id,
+    roadtripId: marker.roadtrip_id,
+    imageUrl: blobs.find((blob) => blob.pathname === marker.image_uuid)?.url || null,
+    position: marker.position,
+    description: marker.description,
+    imageWidth: marker.image_orientation ? (marker.image_orientation === 'landscape' ? 300 : 200) : null,
+    iconType: marker.icon_type,
+  }));
 
-  return NextResponse.json({ locales, images });
+  return NextResponse.json({ locales, markers });
 }

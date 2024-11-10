@@ -11,11 +11,12 @@ export interface Locale {
   elevation: number;
 }
 
-export interface Image {
+export interface Marker {
   id: number;
   roadtripId: number;
-  url: string;
+  imageUrl: string | null;
   position: Point;
   description: string;
-  width: number;
+  imageWidth: number | null;
+  iconType: 'photo' | 'campsite';
 }

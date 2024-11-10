@@ -4,7 +4,7 @@ import { Feature, FeatureCollection } from 'geojson';
 import mapboxgl, { GeoJSONSource, LngLat, LngLatBounds, Map as MapboxMap, MapMouseEvent } from 'mapbox-gl';
 
 import { useStore } from '@/store';
-import { Roadtrip, Locale, Image } from '@/types';
+import { Roadtrip, Locale, Marker } from '@/types';
 
 import styles from './roadtrips.module.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -12,11 +12,11 @@ import classNames from 'classnames';
 import { isPointFeature } from '@/utils';
 
 const ROUTE_SOURCE = 'route-source';
+const POSITION_SOURCE = 'position-source';
 const MARKER_SOURCE = 'marker-source';
-const IMAGE_SOURCE = 'image-source';
 const ROUTE_LAYER = 'route-layer';
+const POSITION_LAYER = 'position-layer';
 const MARKER_LAYER = 'marker-layer';
-const IMAGE_LAYER = 'image-layer';
 
 export default function Trig() {
   const mapContainer = useRef<HTMLDivElement | null>(null);
@@ -54,12 +54,12 @@ export default function Trig() {
         map.current.addSource(ROUTE_SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
       }
 
-      if (!map.current.getSource(MARKER_SOURCE)) {
-        map.current.addSource(MARKER_SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+      if (!map.current.getSource(POSITION_SOURCE)) {
+        map.current.addSource(POSITION_SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
       }
 
-      if (!map.current.getSource(IMAGE_SOURCE)) {
-        map.current.addSource(IMAGE_SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+      if (!map.current.getSource(MARKER_SOURCE)) {
+        map.current.addSource(MARKER_SOURCE, { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
       }
 
       if (!map.current.getLayer(ROUTE_LAYER)) {
@@ -71,21 +71,21 @@ export default function Trig() {
         });
       }
 
-      if (!map.current.getLayer(MARKER_LAYER)) {
+      if (!map.current.getLayer(POSITION_LAYER)) {
         map.current.addLayer({
-          id: MARKER_LAYER,
-          source: MARKER_SOURCE,
+          id: POSITION_LAYER,
+          source: POSITION_SOURCE,
           type: 'symbol',
           layout: { 'icon-image': ['get', 'icon'], 'icon-size': 0.15, 'icon-allow-overlap': true },
         });
       }
 
-      if (!map.current.getLayer(IMAGE_LAYER)) {
+      if (!map.current.getLayer(MARKER_LAYER)) {
         map.current.addLayer({
-          id: IMAGE_LAYER,
-          source: IMAGE_SOURCE,
+          id: MARKER_LAYER,
+          source: MARKER_SOURCE,
           type: 'circle',
-          paint: { 'circle-radius': 4, 'circle-color': 'red', 'circle-stroke-width': 2 },
+          paint: { 'circle-radius': 4, 'circle-color': ['get', 'colour'], 'circle-stroke-width': 2 },
         });
       }
 
@@ -101,7 +101,7 @@ export default function Trig() {
 
       const popup = new mapboxgl.Popup({ closeButton: false, closeOnClick: false, maxWidth: '420px' });
 
-      map.current.on('mouseenter', IMAGE_LAYER, (event: MapMouseEvent) => {
+      map.current.on('mouseenter', MARKER_LAYER, (event: MapMouseEvent) => {
         if (!map.current) return;
 
         map.current.getCanvas().style.cursor = 'pointer';
@@ -118,7 +118,7 @@ export default function Trig() {
         popup.setLngLat(coordinates).setHTML(html).addTo(map.current);
       });
 
-      map.current.on('mouseleave', IMAGE_LAYER, () => {
+      map.current.on('mouseleave', MARKER_LAYER, () => {
         map.current!.getCanvas().style.cursor = '';
         popup.remove();
       });
@@ -147,8 +147,8 @@ export default function Trig() {
 
     setRoadtripLocales(null);
     map.current?.getSource<GeoJSONSource>(ROUTE_SOURCE)?.setData({ type: 'FeatureCollection', features: [] });
+    map.current?.getSource<GeoJSONSource>(POSITION_SOURCE)?.setData({ type: 'FeatureCollection', features: [] });
     map.current?.getSource<GeoJSONSource>(MARKER_SOURCE)?.setData({ type: 'FeatureCollection', features: [] });
-    map.current?.getSource<GeoJSONSource>(IMAGE_SOURCE)?.setData({ type: 'FeatureCollection', features: [] });
 
     // get selected roadtrip positions
 
@@ -156,7 +156,7 @@ export default function Trig() {
     setSelectedRoadtripId(id);
 
     const response = await fetch(`/api/roadtrip/get/${id}`, { method: 'GET' });
-    const { locales, images }: { locales: Locale[]; images: Image[] } = await response.json();
+    const { locales, markers }: { locales: Locale[]; markers: Marker[] } = await response.json();
     setRoadtripLocales(locales);
 
     // add roadtrip positions to map
@@ -170,21 +170,26 @@ export default function Trig() {
 
     map.current?.getSource<GeoJSONSource>(ROUTE_SOURCE)?.setData(routeFeatureCollection);
 
-    // add image markers to map
+    // add markers to map
 
-    const imageFeatures: Feature[] = images.map((image) => {
+    const markerFeatures: Feature[] = markers.map((marker) => {
+      const imageHtml = marker.imageUrl
+        ? `<img src="${marker.imageUrl}" alt="${marker.description}" width="${marker.imageWidth}" />`
+        : '';
+
       return {
         type: 'Feature',
-        geometry: { type: 'Point', coordinates: image.position.coordinates },
+        geometry: { type: 'Point', coordinates: marker.position.coordinates },
         properties: {
-          html: `<img src="${image.url}" alt="${image.description}" width="${image.width}" /><p>${image.description}</p>`,
+          html: `${imageHtml}<p>${marker.description}</p>`,
+          colour: marker.iconType === 'photo' ? 'red' : 'green',
         },
       };
     });
 
-    const imageFeatureCollection: FeatureCollection = { type: 'FeatureCollection', features: imageFeatures };
+    const markerFeatureCollection: FeatureCollection = { type: 'FeatureCollection', features: markerFeatures };
 
-    map.current?.getSource<GeoJSONSource>(IMAGE_SOURCE)?.setData(imageFeatureCollection);
+    map.current?.getSource<GeoJSONSource>(MARKER_SOURCE)?.setData(markerFeatureCollection);
 
     // fit map to bounds
 
@@ -200,51 +205,51 @@ export default function Trig() {
 
     setLoadingLocales(false);
 
-    // add a moving marker to map
+    // add a position marker to map
 
-    const markerConfig = { index: 0, left: 0, right: 0, icon: 'bike-right' };
+    const positionConfig = { index: 0, left: 0, right: 0, icon: 'bike-right' };
 
     const currentIntervalId = setInterval(() => {
-      markerConfig.index++;
-      if (markerConfig.index >= locales.length) return;
+      positionConfig.index++;
+      if (positionConfig.index >= locales.length) return;
 
       const {
         position: { coordinates },
-      } = locales[markerConfig.index];
+      } = locales[positionConfig.index];
 
       const {
         position: { coordinates: previousCoordinates },
-      } = locales[markerConfig.index - 1];
+      } = locales[positionConfig.index - 1];
 
       if (coordinates[0] > previousCoordinates[0]) {
-        markerConfig.right++;
+        positionConfig.right++;
       } else {
-        markerConfig.left++;
+        positionConfig.left++;
       }
 
-      if (markerConfig.right > 500) {
-        markerConfig.icon = 'bike-right';
-        markerConfig.right = 0;
-        markerConfig.left = 0;
-      } else if (markerConfig.left > 500) {
-        markerConfig.icon = 'bike-left';
-        markerConfig.right = 0;
-        markerConfig.left = 0;
+      if (positionConfig.right > 500) {
+        positionConfig.icon = 'bike-right';
+        positionConfig.right = 0;
+        positionConfig.left = 0;
+      } else if (positionConfig.left > 500) {
+        positionConfig.icon = 'bike-left';
+        positionConfig.right = 0;
+        positionConfig.left = 0;
       }
 
-      const markerFeatureCollection: FeatureCollection = {
+      const positionFeatureCollection: FeatureCollection = {
         type: 'FeatureCollection',
         features: [
-          { type: 'Feature', geometry: { type: 'Point', coordinates }, properties: { icon: markerConfig.icon } },
+          { type: 'Feature', geometry: { type: 'Point', coordinates }, properties: { icon: positionConfig.icon } },
         ],
       };
 
-      map.current?.getSource<GeoJSONSource>(MARKER_SOURCE)?.setData(markerFeatureCollection);
+      map.current?.getSource<GeoJSONSource>(POSITION_SOURCE)?.setData(positionFeatureCollection);
 
-      if (markerConfig.index === locales.length) {
+      if (positionConfig.index === locales.length) {
         clearInterval(currentIntervalId);
         setIntervalId(null);
-        map.current?.getSource<GeoJSONSource>(MARKER_SOURCE)?.setData({ type: 'FeatureCollection', features: [] });
+        map.current?.getSource<GeoJSONSource>(POSITION_SOURCE)?.setData({ type: 'FeatureCollection', features: [] });
       }
     }, 1);
 

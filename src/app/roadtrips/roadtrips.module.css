@@ -5,6 +5,7 @@
 }
 
 .roadtripPanelContainer {
+  height: calc(100svh - 2rem);
   position: fixed;
   right: 0;
   top: 0;
@@ -12,6 +13,7 @@
   padding-top: 2rem;
   flex-direction: column;
   align-items: flex-end;
+  overflow-y: scroll;
 }
 
 .roadtripPanel {

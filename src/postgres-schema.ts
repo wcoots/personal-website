@@ -15,17 +15,18 @@ export interface RoadtripPositionsTable {
   timestamp: string; // date
 }
 
-export interface RoadtripImages {
+export interface RoadtripMarkers {
   id: GeneratedAlways<number>;
   roadtrip_id: number;
-  uuid: string;
   position: Point;
   description: string;
-  orientation: 'landscape' | 'portrait';
+  icon_type: 'photo' | 'campsite';
+  image_uuid: string | null;
+  image_orientation: 'landscape' | 'portrait' | null;
 }
 
 export interface Database {
   'database.roadtrips': RoadtripsTable;
   'database.roadtrip_positions': RoadtripPositionsTable;
-  'database.roadtrip_images': RoadtripImages;
+  'database.roadtrip_markers': RoadtripMarkers;
 }
