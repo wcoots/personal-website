@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import { Feature, FeatureCollection } from 'geojson';
-import mapboxgl, { GeoJSONSource, LngLat, Map as MapboxMap, MapMouseEvent } from 'mapbox-gl';
+import mapboxgl, { GeoJSONSource, LngLat, LngLatBounds, Map as MapboxMap, MapMouseEvent } from 'mapbox-gl';
 
 import { useStore } from '@/store';
 import { Roadtrip, Locale, Image } from '@/types';
@@ -17,8 +17,6 @@ const IMAGE_SOURCE = 'image-source';
 const ROUTE_LAYER = 'route-layer';
 const MARKER_LAYER = 'marker-layer';
 const IMAGE_LAYER = 'image-layer';
-
-interface Properties {}
 
 export default function Trig() {
   const mapContainer = useRef<HTMLDivElement | null>(null);
@@ -43,7 +41,6 @@ export default function Trig() {
         [-12, 49],
         [5, 61],
       ],
-      projection: 'naturalEarth',
     });
 
     map.current.on('load', () => {
@@ -141,6 +138,7 @@ export default function Trig() {
     setRoadtripLocales(null);
     map.current?.getSource<GeoJSONSource>(ROUTE_SOURCE)?.setData({ type: 'FeatureCollection', features: [] });
     map.current?.getSource<GeoJSONSource>(MARKER_SOURCE)?.setData({ type: 'FeatureCollection', features: [] });
+    map.current?.getSource<GeoJSONSource>(IMAGE_SOURCE)?.setData({ type: 'FeatureCollection', features: [] });
 
     // get selected roadtrip positions
 
@@ -153,7 +151,7 @@ export default function Trig() {
 
     // add roadtrip positions to map
 
-    const coordinates = locales.map((locale) => [locale.position.lng, locale.position.lat]);
+    const coordinates = locales.map((locale) => locale.position.coordinates);
 
     const routeFeatureCollection: FeatureCollection = {
       type: 'FeatureCollection',
@@ -167,7 +165,7 @@ export default function Trig() {
     const imageFeatures: Feature[] = images.map((image) => {
       return {
         type: 'Feature',
-        geometry: { type: 'Point', coordinates: [image.position.lng, image.position.lat] },
+        geometry: { type: 'Point', coordinates: image.position.coordinates },
         properties: {
           html: `<img src="${image.url}" alt="${image.description}" width="${image.width}" /><p>${image.description}</p>`,
         },
@@ -178,6 +176,18 @@ export default function Trig() {
 
     map.current?.getSource<GeoJSONSource>(IMAGE_SOURCE)?.setData(imageFeatureCollection);
 
+    // fit map to bounds
+
+    const maxLng = Math.max(...coordinates.map((coordinate) => coordinate[0]));
+    const minLng = Math.min(...coordinates.map((coordinate) => coordinate[0]));
+    const maxLat = Math.max(...coordinates.map((coordinate) => coordinate[1]));
+    const minLat = Math.min(...coordinates.map((coordinate) => coordinate[1]));
+
+    const swBound = new LngLat(minLng, minLat);
+    const neBound = new LngLat(maxLng, maxLat);
+
+    map.current?.fitBounds(new LngLatBounds(swBound, neBound), { padding: 50 });
+
     setLoadingLocales(false);
 
     // add a moving marker to map
@@ -187,8 +197,9 @@ export default function Trig() {
     const currentIntervalId = setInterval(() => {
       if (index >= locales.length) return;
 
-      const { position } = locales[index];
-      const coordinates = [position.lng, position.lat];
+      const {
+        position: { coordinates },
+      } = locales[index];
 
       const markerFeatureCollection: FeatureCollection = {
         type: 'FeatureCollection',

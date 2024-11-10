@@ -1,4 +1,4 @@
-import { LngLat } from 'mapbox-gl';
+import { Point } from 'geojson';
 
 export interface Roadtrip {
   id: number;
@@ -7,7 +7,7 @@ export interface Roadtrip {
 }
 
 export interface Locale {
-  position: LngLat;
+  position: Point;
   elevation: number;
 }
 
@@ -15,7 +15,7 @@ export interface Image {
   id: number;
   roadtripId: number;
   url: string;
-  position: LngLat;
+  position: Point;
   description: string;
   width: number;
 }
