@@ -11,7 +11,7 @@ interface Props {
 const iconSvgs: { [iconType in IconType]: { path: string; url: string; target: HTMLAttributeAnchorTarget } } = {
   github: { path: '/github.svg', url: 'https://github.com/wcoots', target: '_blank' },
   linkedin: { path: '/linkedin.svg', url: 'https://www.linkedin.com/in/wcoots/', target: '_blank' },
-  activitymap: { path: '/strava.svg', url: 'https://activity-map.vercel.app/', target: '_blank' },
+  activitymap: { path: '/strava.svg', url: 'https://activity-map.vercel.app/?user=41256001', target: '_blank' },
 };
 
 function IconButton({ identifier }: Props) {
