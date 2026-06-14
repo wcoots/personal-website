@@ -18,7 +18,12 @@ export default function Home() {
           I am <br /> William Cooter
         </div>
         <div className={styles.section}>
-          I am a software engineer <br /> at Living Map
+          <span>
+            I am a software engineer <br /> at{' '}
+            <a href="https://epoch.blue/" target="_blank" rel="noopener noreferrer" className={styles.href}>
+              Epoch
+            </a>
+          </span>
         </div>
         <div className={styles.section}>
           <IconButton identifier="github" />

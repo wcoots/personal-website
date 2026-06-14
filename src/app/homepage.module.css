@@ -59,6 +59,12 @@
   top: 100svh;
 }
 
+.href {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 @media (max-width: 600px) {
   .viewport {
     width: 100svw;
